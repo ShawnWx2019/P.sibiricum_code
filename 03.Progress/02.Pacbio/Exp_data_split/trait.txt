@@ -1,0 +1,16 @@
+sample	group
+Size_1_2	Size_1
+Size_1_3	Size_1
+Size_1_1	Size_1
+Size_2_2	Size_2
+Size_2_3	Size_2
+Size_2_1	Size_2
+Size_3_3	Size_3
+Size_3_1	Size_3
+Size_3_2	Size_3
+Size_4_2	Size_4
+Size_4_1	Size_4
+Size_5_1	Size_5
+Size_5_2	Size_5
+Size_6_2	Size_6
+Size_6_1	Size_6

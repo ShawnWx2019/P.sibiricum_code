@@ -1,0 +1,9 @@
+name,meaning
+sample_id,sample_id
+injection.order,injection.order
+class,class
+group,group
+batch,batch
+injection.order_2,injection.order
+class_2,class
+group_2,group

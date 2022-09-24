@@ -1,0 +1,147 @@
+---
+title: "代谢组部分"
+author: "Shawn Wang"
+date: Aug 22,2022
+format: html
+editor: visual
+bibliography: PosDocProject.bib
+---
+
+<center>
+
+<font color=salmon size=2pt> 🏡Zhang Lab, Aug 05, 2022 🏡</font>
+
+<font color=green size=2pt> 🔬Multi-omics research center, State Key Laboratory of Crop Stress Adaption and Improvement, HENU, Kaifeng, Henan 🔬</font>
+
+</center>
+
+# 方法
+
+**取样方式描述：** 我们在野外进行了黄精块茎的采集，根据经验获取了不同生长年限的材料，粗略分为幼年材料`size1-3`和成年材料`size5-6`,`size4`介于幼年和成年材料之间。
+
+## 实验方法
+
+赵兵提供；
+
+### Metabolites Extraction
+
+All collected samples were flash frozen and ground to a fine powder with a mortar and pestle. The powder of each sample was extracted overnight using 80% HPLC grade methanol containing 1 μM chrysin as the internal standard and the ratio of the fresh weight to the volume of extraction solution was kept as 0.1 g/ml. The undissolved sample residues were precipitated by centrifugation at 13000 rpm for 30 min at 4℃. The clear supernatants were loaded into injection vials and ready for UHPLC-MS/MS.
+
+### High-Performance Liquid Chromatography
+
+For UHPLC-MS/MS assay, The vanquish-flex UHPLC system was coupled to Q Exactive Plus mass spectrometry (Thermo Fisher Scientific) for metabolite separation and detection. A Hypersil GOLD column (2.1×100 mm.1.9 um; Thermo Fisher Scientific) was employed for compound separation at 30°C and 5 μl of sample was loaded. The mobile phase A was HPLC grade H2O with 0.1% (v/v) formic acid (Merck, Germany) and phase B was HPLC grade acetonitrile (Merck, Germany). The gradient elution conditions were set as follows: From 0 to 2min, the mobile phase B increases to 10%; From 2 to 10min, the mobile phase B increases to 50%; From 10 to 10.1min， the mobile phase B increases to 80%; From 10.1 to 13 min, the mobile phase B was kept at 80%; From 13 to 14 min the mobile phase B increases to 95%; From 14-18 min the mobile phase B decreased to 10%. The flow rate was 0.3 ml/min. The MS data acquisition was performed by Q Exactive Plus (ThermoFisher Scientific, Rockford, IL) system. In full scan MS/ddMS2 mode, the resolutions of full scan MS and ddMS2 were set at 70000 and 17500, respectively. The automatic gain control (AGC) target and maximum injection time in full scan MS settings were 1e6 and 100 ms, while their values were 2e5 and 50 ms in dd MS2 settings. The TopN (N, the number of top most abundant ions for fragmentation) was set to 8, and collision energy was set to 20%, 40% and 60%. A heated ESI source was used at positive and negative ion mode. the spray voltage was set as 3.5 KV for positive mode and 3.2 KV for negative mode;The capillary temperature and aux gas heater temperature were set as 320 and 350 °C, respectively. Sheath gas and aux gas flow rate were set at 35 and 15 (in arbitrary units), respectively. The S-lens RF level was 50.
+
+## 数据处理
+
+1.  **数据格式转换：** 得到`.raw`的下机数据后，我们通过[docker版本的ProteoWizard msConvert](https://hub.docker.com/r/chambm/pwiz-skyline-i-agree-to-the-vendor-licenses) @adusumilliDataConversionProteoWizard2017 将原始数据转换为包含MS1信息的`.mzXML`格式，以及包含MS/MS信息的`.mgf`格式。
+
+2.  **提峰、数据清洗：** 我们通过`tidymass` @shenTidyMassObjectorientedReproducible2022 对原始数据进行提峰，数据清洗分为以下几个步骤：
+
+    2.1 缺失值检测， 首先对代谢物积累矩阵所有检测到的`feature`进行缺失值检测，统计。\
+    2.2 噪音去除， 判断一个feature是否为noise的条件为：在所有QC样品中该feature的缺失频率大于20%。\
+    2.3 批次效应检测，去除noise后通过对所有QC样本中feature峰面积统计可以观测到是否有batch effect。\
+    2.4 缺失值填充，使用`tidymass`的`knn`算法填充缺失值。\
+    2.5 数据归一化：使用`tidymass`支持向量机算法对数据进行归一化。 @shenNormalizationIntegrationLargescale2016。\
+    2.6 数据整合。
+
+3.  **代谢物注释：** 我们使用以下数据库对检测到的feature进行注释：
+
+    3.1 [MassBank of North America, MoNA](https://mona.fiehnlab.ucdavis.edu/downloads) MS2;\
+    3.2 [MassBank](https://massbank.eu/MassBank/) MS2;\
+    3.3 [Human Metabolome Database, HMDB](https://hmdb.ca/downloads) MS2;\
+    3.4 [Vaniya/Fiehn Natural Products Library](https://mona.fiehnlab.ucdavis.edu/spectra/browse?query=tags.text%3D%3D%22VF-NPL%22) MS2;\
+    3.5 [RIKEN PlaSMA](https://mona.fiehnlab.ucdavis.edu/spectra/browse?query=tags.text%3D%3D%22RIKEN%20PlaSMA%22) MS2;\
+    3.6 Tidymass 内置的RPLC、Fieh_hilic数据库 MS2；\
+    3.7 [KNApSAcK](http://www.knapsackfamily.com/KNApSAcK/) MS1;\
+    3.8 [PlantCyc](https://plantcyc.org/) MS1;\
+    3.9 [KEGG](https://www.genome.jp/kegg/) MS1.\
+    3.10 [MetDNA2](http://metdna.zhulab.cn/) 去噪后我们将剩余的feature的MS1及MS2的数据导出，通过`MetDNA2`对feature进行注释 MetDNA2 @shenMetabolicReactionNetworkbased2019；
+
+4.  **注释过滤及整合：** 搜库的时候每个数据库会给出3个匹配度最高的candidates,我们会通过以下方式对注释进行过滤及去冗余：
+
+    4.1 对于有MS/MS信息匹配成功的我们保留所有加合离子模式匹配，对于只有MS1匹配的feature，我们只保留`[M+H]+`以及`[M-H]-`的结果。\
+    4.2 对于注释到同一代谢物的feature，优先保留有MS/MS信息的feature. 然后根据tidymass给出的匹配度总得分（Total score）选取得分最高的一个feature.\
+    4.3 对于同一个feature注释到不同的代谢物的情况，我们还是优先保留MS/MS匹配的，次优先保留`[M+H]+`或者`[M-H]-`模式，最后再根据total score保留。 4.4 对于MetDNA的注释我们没有进行过多的处理，直接将结果整合进来。
+
+5.  **代谢物分类：** 我们根据代谢物的`InChiKey`信息通过Classyfire @djoumboufeunangClassyFireAutomatedChemical2016 数据库将代谢物进行分类，为了更好的可视化分类结果，我们将分类结果中代谢物数量大于等于10个的称为major class，3-9的叫tiny class，小于3个的归类为other class.
+
+6.  **PCA：**我们使用去噪后剩余的feature做PCA分析，首先对标准化后的峰面积做了log10的转换，用R包[PCAtools](http://mirrors.nju.edu.cn/bioconductor/3.15/bioc/html/PCAtools.html) 进行PCA计算，用[scatterplot3D包](https://cran.r-project.org/web/packages/scatterplot3d/index.html)进行可视化.
+
+7.  **热图：** 我们将最终注释到的化合物通过[ComplexHeatmap](https://github.com/jokergoo/ComplexHeatmap) @guComplexHeatmapsReveal2016 进行了可视化，并且使用`column_km=12`以及`column_km_repeat = 5000`参数对代谢物做了5000次的重复的k-means分析,最终将代谢物分了12个cluster. 然后通过计算每个cluster的均值绘制了对应cluster的特征曲线。
+
+# 结果：
+
+## 代谢物提峰，过滤，注释统计结果：
+
+<center>**表1. 数据清洗步骤中feature数量的统计**</center>
+
+| Ion      | original | remove noise | Annotation |
+|----------|----------|--------------|------------|
+| Negative | 12316    | 2156         | 362        |
+| Positive | 16809    | 3962         | 414        |
+| total    | 29125    | 6618         | 776        |
+
+<center>**补充表1. 最终776个代谢物积累矩阵**</center>
+
+```{r,message=FALSE, warning=FALSE, include=FALSE, out.width='100%'}
+suppressMessages(library(bruceR))
+```
+
+```{r,echo=FALSE, message=FALSE, warning=FALSE,}
+Tables1 <- import("../04.Result/01.Tables/TableS1.Accumulation_Matrix.xlsx",sheet = 1)
+colnames(Tables1) = Tables1[1,]
+Tables1 = Tables1[2:15,] %>% 
+  mutate(Size_1 = as.numeric(Size_1),
+         Size_2 = as.numeric(Size_2),
+         Size_3 = as.numeric(Size_3),
+         Size_4 = as.numeric(Size_4),
+         Size_5 = as.numeric(Size_5),
+         Size_6 = as.numeric(Size_6))
+print_table(Tables1,digits = 2)
+```
+
+<center>**补充表2. 代谢物注释**</center>
+
+```{r,echo=FALSE, message=FALSE, warning=FALSE,}
+Tables2 <- import("../04.Result/01.Tables/TableS2.Compound_Annotation.xlsx",sheet = 1)
+colnames(Tables2) = Tables2[1,]
+Tables2 = Tables2[2:10,-7]
+colnames(Tables2)[3] = "rt"
+print_table(Tables2,digits = 2)
+```
+
+<center>**补充表3. 代谢物分类**</center>
+
+```{r,echo=FALSE, message=FALSE, warning=FALSE}
+Tables3 <- import("../04.Result/01.Tables/TableS3.Compound_classification.xlsx",sheet = 1)
+colnames(Tables3) = Tables3[1,]
+Tables3 = Tables3[2:10,]
+colnames(Tables3)[3] = "rt"
+print_table(Tables3,digits = 2)
+```
+
+## 结果分析
+
+### 数据清洗部分
+
+经过提峰我们从正谱和负谱共得到29125（pos: 12316, neg:16809）个feature. 经过过滤，我们得到6618（pos: 2156， neg: 3962）个feature，这些feature在至少80%的质控样本中都可以检测到。经过与众多在线数据库比对及MetDNA2的注释，我们最终从正谱筛选出362个从负谱筛选出414个具有较高置信度的，有较为准确注释的化合物进行下游分析。  
+
+正谱操作正常，负谱前4个QC存在微弱的批次效应，经过归一化整合，批次效应被去除（Figure S1.）显然这种差异是系统误差（systematic error）。  
+
+我们对所有检测到的feature做了PCA分析（Figure S2），经过数据标准化我们发现所有的`QC`样本都聚在一起，说明系统误差被很好的消除了，负谱的批次效应也被很好的消除。此外我们发现无论在正谱还是负谱成年材料中的`size5`都明显区别与其他材料，负谱中`size6`也可以和幼年材料区分开，但似乎过渡材料`size4`更趋向于幼年材料。当然
+
+::: {#fig-batcheffect layout-nrow=2}
+![Figure S1. Batch effect detection](FigS1.batch_effect_boxplot.png){#figS1-Boxplot}  
+
+![FigureS2. Raw data pca](FigS2.raw_data_pca.png){#figS2-pca}
+
+batch effect
+:::
+
+### 整体结果分析
+
+::: {#fig-overview layout-ncol="1"}
+![Figure 2. overview of metabolomics data](Fig2.Metabo_overview.png){#fig2-overview}
+
+overview
+:::
