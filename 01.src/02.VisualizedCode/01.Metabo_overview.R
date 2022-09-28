@@ -136,10 +136,10 @@ IMOtoolkits::IMO_plt_pca(obj = object_origin,tag = "group",center = T,scale = T,
 
 pdf("pca3D.pdf",height = 7,width = 7)
 scatterplot3d(
-  obj.pca$rotated[,1:3],
-  xlab = paste0("PC1 (",round(obj.pca$variance[1],2),"%)"),
+  obj.pca$rotated[,c(3,2,1)],
+  xlab = paste0("PC3 (",round(obj.pca$variance[3],2),"%)"),
   ylab = paste0("PC2 (",round(obj.pca$variance[2],2),"%)"),
-  zlab = paste0("PC3 (",round(obj.pca$variance[3],2),"%)"),
+  zlab = paste0("PC1 (",round(obj.pca$variance[1],2),"%)"),
   pch = 16,angle = 30,
   box = T,cex.symbols = 2,lty.hide = 2,lty.grid = 2,
   type = 'p',color = rep(rainbow(6),c(3,3,3,2,2,2))

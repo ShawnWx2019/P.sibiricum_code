@@ -15,11 +15,11 @@ bibliography: PosDocProject.bib
 
 </center>
 
-# 方法
+# 1. 方法
 
 **取样方式描述：** 我们在野外进行了黄精块茎的采集，根据经验获取了不同生长年限的材料，粗略分为幼年材料`size1-3`和成年材料`size5-6`,`size4`介于幼年和成年材料之间。
 
-## 实验方法
+## 1.1 实验方法
 
 赵兵提供；
 
@@ -31,7 +31,7 @@ All collected samples were flash frozen and ground to a fine powder with a morta
 
 For UHPLC-MS/MS assay, The vanquish-flex UHPLC system was coupled to Q Exactive Plus mass spectrometry (Thermo Fisher Scientific) for metabolite separation and detection. A Hypersil GOLD column (2.1×100 mm.1.9 um; Thermo Fisher Scientific) was employed for compound separation at 30°C and 5 μl of sample was loaded. The mobile phase A was HPLC grade H2O with 0.1% (v/v) formic acid (Merck, Germany) and phase B was HPLC grade acetonitrile (Merck, Germany). The gradient elution conditions were set as follows: From 0 to 2min, the mobile phase B increases to 10%; From 2 to 10min, the mobile phase B increases to 50%; From 10 to 10.1min， the mobile phase B increases to 80%; From 10.1 to 13 min, the mobile phase B was kept at 80%; From 13 to 14 min the mobile phase B increases to 95%; From 14-18 min the mobile phase B decreased to 10%. The flow rate was 0.3 ml/min. The MS data acquisition was performed by Q Exactive Plus (ThermoFisher Scientific, Rockford, IL) system. In full scan MS/ddMS2 mode, the resolutions of full scan MS and ddMS2 were set at 70000 and 17500, respectively. The automatic gain control (AGC) target and maximum injection time in full scan MS settings were 1e6 and 100 ms, while their values were 2e5 and 50 ms in dd MS2 settings. The TopN (N, the number of top most abundant ions for fragmentation) was set to 8, and collision energy was set to 20%, 40% and 60%. A heated ESI source was used at positive and negative ion mode. the spray voltage was set as 3.5 KV for positive mode and 3.2 KV for negative mode;The capillary temperature and aux gas heater temperature were set as 320 and 350 °C, respectively. Sheath gas and aux gas flow rate were set at 35 and 15 (in arbitrary units), respectively. The S-lens RF level was 50.
 
-## 数据处理
+## 1.2 数据处理
 
 1.  **数据格式转换：** 得到`.raw`的下机数据后，我们通过[docker版本的ProteoWizard msConvert](https://hub.docker.com/r/chambm/pwiz-skyline-i-agree-to-the-vendor-licenses) @adusumilliDataConversionProteoWizard2017 将原始数据转换为包含MS1信息的`.mzXML`格式，以及包含MS/MS信息的`.mgf`格式。
 
@@ -69,17 +69,10 @@ For UHPLC-MS/MS assay, The vanquish-flex UHPLC system was coupled to Q Exactive 
 
 7.  **热图：** 我们将最终注释到的化合物通过[ComplexHeatmap](https://github.com/jokergoo/ComplexHeatmap) @guComplexHeatmapsReveal2016 进行了可视化，并且使用`column_km=12`以及`column_km_repeat = 5000`参数对代谢物做了5000次的重复的k-means分析,最终将代谢物分了12个cluster. 然后通过计算每个cluster的均值绘制了对应cluster的特征曲线。
 
-# 结果：
+# 2. 结果：
 
-## 代谢物提峰，过滤，注释统计结果：
+## 2.1 代谢物提峰，过滤，注释统计结果图表：
 
-<center>**表1. 数据清洗步骤中feature数量的统计**</center>
-
-| Ion      | original | remove noise | Annotation |
-|----------|----------|--------------|------------|
-| Negative | 12316    | 2156         | 362        |
-| Positive | 16809    | 3962         | 414        |
-| total    | 29125    | 6618         | 776        |
 
 <center>**补充表1. 最终776个代谢物积累矩阵**</center>
 
@@ -120,15 +113,32 @@ colnames(Tables3)[3] = "rt"
 print_table(Tables3,digits = 2)
 ```
 
-## 结果分析
+## 2.2 不同年份黄精块茎非靶代谢组分析  
 
-### 数据清洗部分
+### 2.2.1 Overview
 
-经过提峰我们从正谱和负谱共得到29125（pos: 12316, neg:16809）个feature. 经过过滤，我们得到6618（pos: 2156， neg: 3962）个feature，这些feature在至少80%的质控样本中都可以检测到。经过与众多在线数据库比对及MetDNA2的注释，我们最终从正谱筛选出362个从负谱筛选出414个具有较高置信度的，有较为准确注释的化合物进行下游分析。  
+我们通过非靶向代谢组学技术鉴定了不同年份黄精的小分子代谢物含量。我们从正谱和负谱共检测出29125个feature， 经过去噪只剩下6618个feature，最终通过与数据库比对以及MetDNA2预测共注释到776个candidate metabolites做后续分析(Table 1)。通过严格的数据清洗我们发现所有的QC的样品在去噪后的feature PCA图中聚集在一起（Figure S2 A,B），说明系统误差被很好的消除，同时负谱中轻微的批次效应也被消除（Figure S1； Figure S2 A,B）。QC样品中标准化后的feature `RSD≤30%` 的有96.7%（Figure S2 C,D）。说明本次实验有良好的稳定性及重复性，数据可靠。
 
-正谱操作正常，负谱前4个QC存在微弱的批次效应，经过归一化整合，批次效应被去除（Figure S1.）显然这种差异是系统误差（systematic error）。  
+我们对最终用于后续分析的776个features做了PCA分析，前三个主成分分别可以解释20.22%,13.75%,10.18%的variation。成年黄精与幼年黄精具有明显的差异(Figure 1 A) ，介于两者之间的`size4`更偏向于幼年黄精。基于classyfire数据库分类的结果表明这些化合物主要为Carboxylic acids and derivatives (12.72%),Benzene and substituted derivatives(10.79%),Organooxygen compounds(9.5%),Prenol lipids(9.5%)以及Fatty Acyls(8.2) （Figure 2 B,C）. 其中Carboxylic acids and derivatives类别中主要是一些Amino acids, Benzene and substituted derivatives类别下主要为一些Benzoic acids and derivatives,Organooxygen compounds主要为Carbohydrates and carbohydrate conjugates, Fatty Acyls中主要为Fatty acids and conjugates以及Fatty acid esters类化合物（Table S3）。除了这些主要类别外，还一定数量的苯丙烷类化合物，比如黄酮类、肉桂酸及其衍生物、香豆素及其衍生物等。
 
-我们对所有检测到的feature做了PCA分析（Figure S2），经过数据标准化我们发现所有的`QC`样本都聚在一起，说明系统误差被很好的消除了，负谱的批次效应也被很好的消除。此外我们发现无论在正谱还是负谱成年材料中的`size5`都明显区别与其他材料，负谱中`size6`也可以和幼年材料区分开，但似乎过渡材料`size4`更趋向于幼年材料。当然
+
+
+
+### 代谢水平成年黄精和幼年黄精存在显著差异。
+
+为了研究成年黄精和幼年黄精之间的差异，我们首先对所有代谢物的积累模式做了k-means分类。最终我们将776个代谢物分成了12个cluster， 我们发现cluster5，cluster6，cluster7整体表现为在juvenile中积累量低，而在adult中含量相对较高，(Figure 2. D), 结果表明cluster7中存在一些多糖类物质，例如棉子糖、纤维五糖及纤维六糖，不饱和脂肪酸类物质，不如亚麻酸和α-亚油酸，苯丙烷类物质，对香豆酸，肉桂酸以及柚皮素等（Table S1）。由于野外采样造成的个体差异较大，假设代谢组数据的高维性，我们在通过one-way anova分析差异代谢物的同时加入了OPLS-DA去消减组内差异。最终我们得到了77个差异积累的代谢物（pvalue < 0.05, abs(log2fc) > 0.26）,VIP > 1。其中显著下调的有7个,上调的有70个，最终我们发现存在于cluster6和cluster7中的多糖类物质以及不饱和脂肪酸类物质均存在显著差异（Figure 3 DAM analysis）
+
+
+
+<center>**表1. 数据清洗步骤中feature数量的统计**</center>
+
+| Ion      | original | remove noise | Annotation |
+|----------|----------|--------------|------------|
+| Negative | 12316    | 2156         | 362        |
+| Positive | 16809    | 3962         | 414        |
+| total    | 29125    | 6618         | 776        |
+
+
 
 ::: {#fig-batcheffect layout-nrow=2}
 ![Figure S1. Batch effect detection](FigS1.batch_effect_boxplot.png){#figS1-Boxplot}  
@@ -138,10 +148,59 @@ print_table(Tables3,digits = 2)
 batch effect
 :::
 
-### 整体结果分析
+*Figure legend* Figure S1. The auto-scaled intensity box plots of QC samples before and after SVR normalization.
+
+
+
+```{r,message=FALSE, warning=FALSE, include=FALSE, out.width='100%'}
+library(tidymass)
+library(IMOtoolkits)
+```
+
+```{r,echo=FALSE, message=FALSE, warning=FALSE}
+load("../03.Progress/01.Metabolomics/Data_cleaning/object_origin_merge.rds")
+a =
+IMOtoolkits::IMO_plt_pca(obj = object_origin,tag = "group",center = T,scale = T,removeVar = .1,interactive = T,showImage = F)
+
+a$plot
+```
 
 ::: {#fig-overview layout-ncol="1"}
 ![Figure 2. overview of metabolomics data](Fig2.Metabo_overview.png){#fig2-overview}
 
+*Figure legend: * Overview of metabolomics data. A. PCA result of annotated compounds. Coordinates x,y and z represent first 3 component of PCA analysis result, numbers in parentheses represents the variance explanation rate of corresponding component. B.Compounds Major class. Major class means classes with compounds number more than 10, C. Compound Minor class, Classes with compounds number between 3 to 10. D. Accumulation profile of all annotated compounds. Numbers in left means clusters number of k-means. line diagram in left represents the log10 transformed average peak area of correspoding clusters. 
+
 overview
 :::
+
+
+
+::: {#fig-overview layout-ncol="1"}
+![Figure 3. DAM analysis](Fig3.DAM.png){#fig3-DAM}
+
+overview
+:::
+
+<center>**表2. 差异代谢物**</center>
+
+```{r,echo=FALSE, message=FALSE, warning=FALSE,}
+Tables2 <- import("../04.Result/01.Tables/Adult_vs_Juvenal.xlsx",sheet = 1)
+print_table(Tables2,digits = 2)
+```
+
+## 讨论
+
+**方法上，个体差异**  
+
+我们从Figure S2的PCA结果中发现个体差异还是比较明显的，但是整体幼年材料和成年材料差异较为明显，由于植物中存在大量次生代谢物，这些次生代谢物稳定性较差，所以整体上会放大个体差异。所以在后续代谢物差异分析的时候我们加入了OPLS-DA去控制组内个体差异，从而找到幼年与成年黄精块茎中主要差异代谢物。
+
+**功能上**
+
+这个等后续联合分析完结合转录的数据，目前认为要从以下3方面入手：
+
+1. 多糖类（棉子糖、纤维五糖、纤维六糖（寡糖？））膳食纤维 ==> 增加饱腹感 ==> 预防肥胖.  
+
+2. 不饱和脂肪酸类（亚油酸、α-亚麻酸）==> 预防心血管疾病（CVD）.
+
+3. 苯丙烷类（柚皮素、羟基肉桂酸、香豆酸）==> 抗氧化、抗衰老.
+

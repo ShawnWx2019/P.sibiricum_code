@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.0.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Shawn Wang">
+<meta name="dcterms.date" content="2022-08-22">
+
+<title>三代测序</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+<script src="02.PacBiooverview_files/libs/clipboard/clipboard.min.js"></script>
+<script src="02.PacBiooverview_files/libs/quarto-html/quarto.js"></script>
+<script src="02.PacBiooverview_files/libs/quarto-html/popper.min.js"></script>
+<script src="02.PacBiooverview_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="02.PacBiooverview_files/libs/quarto-html/anchor.min.js"></script>
+<link href="02.PacBiooverview_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="02.PacBiooverview_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="02.PacBiooverview_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="02.PacBiooverview_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="02.PacBiooverview_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">三代测序</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Shawn Wang </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">August 22, 2022</p>
+    </div>
+  </div>
+    
+  </div>
+  
+
+</header>
+
+<center>
+<p><font color="salmon" size="2pt"> 🏡Zhang Lab, Aug 05, 2022 🏡</font></p>
+<p><font color="green" size="2pt"> 🔬Multi-omics research center, State Key Laboratory of Crop Stress Adaption and Improvement, HENU, Kaifeng, Henan 🔬</font></p>
+</center>
+<section id="三代全长转录组测序方法" class="level1">
+<h1>2.1 三代全长转录组测序方法</h1>
+<section id="样品检测" class="level2">
+<h2 class="anchored" data-anchor-id="样品检测">2.1.1 样品检测</h2>
+<p>  PacBio Iso_seq RNA样品检测方法包括以下两种：</p>
+<p>  1. NanoDrop 2000分光光度法：检测Total RNA的浓度和纯度(OD 260/280 比值)；</p>
+<p>  2. Agilent 2100系统：检测Total RNA完整度和浓度定量。   </p>
+</section>
+<section id="文库制备" class="level2">
+<h2 class="anchored" data-anchor-id="文库制备">2.1.2 文库制备</h2>
+<p>  样品要求浓度和总量达标，RNA完整无降解,无DNA和蛋白污染，无高浓度离子、螯合剂、变性剂等杂质，即可进入建库流程.文库构建流程如下：</p>
+<p>  1. 用带有Oligo(dT)的磁珠富集真核生物mRNA；</p>
+<p>  2. 使用SMARTer™ PCR cDNA Synthesis Kit，将mRNA反转录成cDNA；</p>
+<p>  3. PCR扩增富集全长cDNA；</p>
+<p>  4. 使用BluePippin筛选全长cDNA片段，构建不同长度插入片段的文库；</p>
+<p>  5. 筛选后的全长cDNA进行再次PCR富集；</p>
+<p>  6. 对全长cDNA进行末端修复，连接SMRT哑铃型接头，获得SMRT bell文库；</p>
+<p>  7. 使用BluePippin针对3-6kb和5-10kb SMRT bell文库(可选)进行二次筛选，获得测序文库。   </p>
+</section>
+<section id="库检及上机测序" class="level2">
+<h2 class="anchored" data-anchor-id="库检及上机测序">2.1.3 库检及上机测序</h2>
+<p>  不同长度的文库构建完成后，先使用Qubit 2.0进行定量，并用Agilent 2100对文库的insert size进行检测，经PacBio Caculater计算后，按照比例将测序引物和测序酶结合到SMRT模板上，进行上机测序。</p>
+<p>  PacBio RSII系列和Sequel测序系统以SMRT Cell为测序载体，分别含有150,000个和1,000,000纳米级的零模波导孔(ZMW)，每个ZMW能包含一个DNA聚合酶及一条DNA样品链，并通过不同荧光标记的核苷酸及荧光激发的过程，将不同碱基的信号捕捉下来，从而得到碱基序列信息。</p>
+<p>  PacBio测序系统测序平均读长8Kb-15Kb，最长可达到40Kb-80Kb。目前PacBio RSII测序仪可以产出数据500Mb-1.5Gb/SMRT Cell，而新型Sequel则可以产出2Gb-5Gb/SMRT Cell。对于单个样本检测中高表达转录本，一般需要4Gb的数据产出；对于混合样本检测中高表达转录本，一般需要8Gb的数据产出。</p>
+</section>
+</section>
+<section id="信息分析流程" class="level1">
+<h1>2.2 信息分析流程</h1>
+<p>PacBio Sequel平台或RSII平台对不同长度的cDNA文库进行测序，得到大量的下机数据，称为Raw reads。我们首先对Raw</p>
+<p>reads进行质控和过滤，去除低质量和读长较短的reads。过滤后的reads通过分类、聚类和矫正可以获得高质量的全长转录本；由于全长转录本聚类较为严格，为了去除冗余的转录本，采用CD-HIT软件对全长转录本去冗余。得到非冗余的全长转录本后，一方面可以对全长转录本进行编码区(CDS)的预测以及功能注释；另一方面也可以对转录本序列进行Isoform、基因家族、SSR、可变剪切、lncRNA等分析。</p>
+</section>
+<section id="全长转录组测序" class="level1">
+<h1>3.1 全长转录组测序</h1>
+<div id="fig-batcheffect" class="quarto-layout-panel">
+<figure class="figure">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: center;">
+<div id="Def" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="subreads.definition.png" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">PicBio文库示意图</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: center;">
+<div id="Def2" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="chimeras.definition.png" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">嵌合序列示意图</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<p></p><figcaption class="figure-caption">Figure 1: PacBio文库构建</figcaption><p></p>
+</figure>
+</div>
+<section id="terms" class="level2">
+<h2 class="anchored" data-anchor-id="terms">Terms:</h2>
+<table class="table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>全称</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Single Molecule, Real-Time sequencing， （SMRT） bell</td>
+<td>PacBio平台构建的文库形状是一个类似哑铃(“套马环”)的结构，称为SMRT bell文库，中间是测序片段，两端是环状的测序接头</td>
+</tr>
+<tr class="even">
+<td>Zero-Mode Waveguides （ZMW）</td>
+<td>ZMW（Zero-Mode Waveguides）孔，即零模波导孔。每一个SMRT Cell 中含有大量这种圆形纳米小孔，直径为50~100nm，该小孔利用了一种物理效应零模波导，外径比激发光波长小，当 DNA 分子进入小孔后，因激发光从孔底发出的光不能穿透小孔进入上方的溶液区，仅被限制在底部一个足以覆盖被检测 DNA 部分的区域，进而收集该区域的信号，将背景噪音降到最低。</td>
+</tr>
+<tr class="odd">
+<td>Polymerase read</td>
+<td>测序读段，指由DNA聚合酶沿着”套马环”模板链反应合成的核苷酸序列</td>
+</tr>
+<tr class="even">
+<td>Subread</td>
+<td>测序读段，根据接头序列将Polymerase read打断后的序列，去除5´和3测序引物后的序列</td>
+</tr>
+<tr class="odd">
+<td>number of full passes</td>
+<td>指原始序列中存在两端均含有SMRT adapter的子序列个数</td>
+</tr>
+<tr class="even">
+<td>Reads of Insert （ROI）</td>
+<td>比对后的一致性序列，当ZMW小孔中的Polymerase read被打断成多个subreads时，它们的一致性序列即是每个ZMW小孔的Reads of Insert(ROI)</td>
+</tr>
+<tr class="odd">
+<td>Circular Consensus Sequence CCS</td>
+<td>环装一致性序列，是一个 Polymerase read 上的多条 subreads 序列，相互校正得到的一条反映真实文库的序列。</td>
+</tr>
+<tr class="even">
+<td>Full-Length Read 、Non-Full-Length Read</td>
+<td>全长转录本和非全长转录本，两端同时含有3´引物和5´引物，及3´引物前含有polyA尾的Reads of Insert称为全长转录本(Full-Length Read)。反之，则为非全长转录本(Non-Full-Length Read)</td>
+</tr>
+<tr class="odd">
+<td>Chimeras</td>
+<td>零模波导孔中也会测到一些异常的插入读段，例如嵌合序列(Chimeras)。往往是由接头浓度不足、PCR引物浓度或生物学原因引起原始序列的插入读段间接头或引物缺失而形成的</td>
+</tr>
+<tr class="even">
+<td>High fidelity reads （HiFi reads）</td>
+<td>是 Sequel II 三代测序平台推出的兼顾长读长和高准确度的测序序列，HiFi reads 具有 &gt;99.9% （Q20）单分子 reads 准确度的准确率。</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="overview" class="level2">
+<h2 class="anchored" data-anchor-id="overview">3.1.1 Overview</h2>
+<p>本研究基于PacBio Sequel II CNDx平台共产生了70.47Gb的全长转录组数据，其中包括了 38,696,058条subreads，去冗余后产生了</p>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      let href = ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

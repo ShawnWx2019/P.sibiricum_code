@@ -1,0 +1,95 @@
+---
+title: "三代测序"
+author: "Shawn Wang"
+date: Aug 22,2022
+format: html
+editor: visual
+bibliography: PosDocProject.bib
+---
+
+<center>
+
+<font color=salmon size=2pt> 🏡Zhang Lab, Aug 05, 2022 🏡</font>
+
+<font color=green size=2pt> 🔬Multi-omics research center, State Key Laboratory of Crop Stress Adaption and Improvement, HENU, Kaifeng, Henan 🔬</font>
+
+</center>
+
+# 2.1 三代全长转录组测序方法
+
+## 2.1.1 样品检测
+
+  PacBio Iso_seq RNA样品检测方法包括以下两种：
+
+  1. NanoDrop 2000分光光度法：检测Total RNA的浓度和纯度(OD 260/280 比值)；
+
+  2. Agilent 2100系统：检测Total RNA完整度和浓度定量。   
+
+## 2.1.2 文库制备
+
+  样品要求浓度和总量达标，RNA完整无降解,无DNA和蛋白污染，无高浓度离子、螯合剂、变性剂等杂质，即可进入建库流程.文库构建流程如下：
+
+  1. 用带有Oligo(dT)的磁珠富集真核生物mRNA；
+
+  2. 使用SMARTer™ PCR cDNA Synthesis Kit，将mRNA反转录成cDNA；
+
+  3. PCR扩增富集全长cDNA；
+
+  4. 使用BluePippin筛选全长cDNA片段，构建不同长度插入片段的文库；
+
+  5. 筛选后的全长cDNA进行再次PCR富集；
+
+  6. 对全长cDNA进行末端修复，连接SMRT哑铃型接头，获得SMRT bell文库；
+
+  7. 使用BluePippin针对3-6kb和5-10kb SMRT bell文库(可选)进行二次筛选，获得测序文库。   
+
+## 2.1.3 库检及上机测序
+
+  不同长度的文库构建完成后，先使用Qubit 2.0进行定量，并用Agilent 2100对文库的insert size进行检测，经PacBio Caculater计算后，按照比例将测序引物和测序酶结合到SMRT模板上，进行上机测序。
+
+  PacBio RSII系列和Sequel测序系统以SMRT Cell为测序载体，分别含有150,000个和1,000,000纳米级的零模波导孔(ZMW)，每个ZMW能包含一个DNA聚合酶及一条DNA样品链，并通过不同荧光标记的核苷酸及荧光激发的过程，将不同碱基的信号捕捉下来，从而得到碱基序列信息。
+
+  PacBio测序系统测序平均读长8Kb-15Kb，最长可达到40Kb-80Kb。目前PacBio RSII测序仪可以产出数据500Mb-1.5Gb/SMRT Cell，而新型Sequel则可以产出2Gb-5Gb/SMRT Cell。对于单个样本检测中高表达转录本，一般需要4Gb的数据产出；对于混合样本检测中高表达转录本，一般需要8Gb的数据产出。
+
+# 2.2 信息分析流程
+
+2.2.1 插入序列质控：对于测序下机的数据，首先过滤掉接头和低质量序列，得到Subreads。筛选满足number of full passes>=1，序列准确性大于0.9的Subreads得到一致性序列，即是每个ZMW小孔的插入序列(Reads of Insert,简称ROI)。   
+
+2.2.2 转录本的分类： 对于上一步获得的ROI，按照是否含有3´引物和5´引物，及3´引物前是否含有polyA尾将ROI分为全长转录本和非全长转录本；按照序列内部有无测序引物将ROI分为嵌合转录本和非嵌合转录本；对ROI分类后，取全长非嵌合的转录本进行聚类，去掉一部分冗余的转录本；为了提高序列的准确性，聚类后的全长非嵌合转录本可以用非全长的转录本进行序列矫正。  
+
+2.2.3 转录本的聚类和矫正：   
+
+获得全长转录本后，由于全长转录本中可能存在很多重复的转录本，我们需要对转录本进行聚类。通过ICE(isoform-level clustering algorithm)算法对全长转录本序列进行迭代聚类，将相似的序列聚类到一簇cluster，每个cluster得到一个一致转录本。  
+结合非全长序列，使用矫正(polish)程序对各cluster中的一致序列进行校正。得到准确度大于99%的高质量转录本(HQ,high-quality isoforms)和低质量转录本(LQ,low-quality)转录本。   
+
+2.2.4 全长转录本去冗余： 由于全长转录本在聚类过程中参数设置较严格，为得到质量较高的一致转录本序列，同一转录本的多拷贝序列分到不同cluster的可能性较大，会产生一些冗余的序列。同时，全长转录本测序过程中，由于3’端存在poly-A结构，可以确定3’端比较完整，而5’端序列容易降解，导致同一转录本的不同拷贝分到不同的cluster中，如下图绿色圈中所示，5’端差异造成不同转录本，导致冗余序列的产生。此外，不同长度的cDNA文库之间也可能存在重复的序列，亦会产生冗余的序列。 对于无参全长转录组，我们采用CD-HIT软件对高质量全长转录本进一步去冗余(参数：c=0.99、T=6、G=1、U=10、s=0.999、d=40、p=1)，去冗余后得到非冗余的高质量转录本。
+
+# 3.1 全长转录组测序
+
+::: {#fig-batcheffect layout-nrow="2"}
+![PicBio文库示意图](subreads.definition.png){#Def}
+
+![嵌合序列示意图](chimeras.definition.png){#Def2}
+
+PacBio文库构建
+:::
+
+## Terms:
+
+| 全称                                    | 描述                                                                                                                                                                       |
+|------------------------------------|------------------------------------|
+| Single Molecule, Real-Time sequencing， （SMRT） bell                               | PacBio平台构建的文库形状是一个类似哑铃("套马环")的结构，称为SMRT bell文库，中间是测序片段，两端是环状的测序接头                                                            |
+Zero-Mode Waveguides （ZMW） | ZMW（Zero-Mode Waveguides）孔，即零模波导孔。每一个SMRT Cell 中含有大量这种圆形纳米小孔，直径为50~100nm，该小孔利用了一种物理效应零模波导，外径比激发光波长小，当 DNA 分子进入小孔后，因激发光从孔底发出的光不能穿透小孔进入上方的溶液区，仅被限制在底部一个足以覆盖被检测 DNA 部分的区域，进而收集该区域的信号，将背景噪音降到最低。
+| Polymerase read                         | 测序读段，指由DNA聚合酶沿着"套马环"模板链反应合成的核苷酸序列                                                                                                              |
+| Subread                                 | 测序读段，根据接头序列将Polymerase read打断后的序列，去除5´和3测序引物后的序列                                                                                             |
+| number of full passes                   | 指原始序列中存在两端均含有SMRT adapter的子序列个数                                                                                                                         |
+| Reads of Insert （ROI）                 | 比对后的一致性序列，当ZMW小孔中的Polymerase read被打断成多个subreads时，它们的一致性序列即是每个ZMW小孔的Reads of Insert(ROI)                                              |
+Circular Consensus Sequence CCS | 环装一致性序列，是一个 Polymerase read 上的多条 subreads 序列，相互校正得到的一条反映真实文库的序列。
+| Full-Length Read 、Non-Full-Length Read | 全长转录本和非全长转录本，两端同时含有3´引物和5´引物，及3´引物前含有polyA尾的Reads of Insert称为全长转录本(Full-Length Read)。反之，则为非全长转录本(Non-Full-Length Read) |
+| Chimeras                                | 零模波导孔中也会测到一些异常的插入读段，例如嵌合序列(Chimeras)。往往是由接头浓度不足、PCR引物浓度或生物学原因引起原始序列的插入读段间接头或引物缺失而形成的                |
+High fidelity reads （HiFi reads）| 是 Sequel II 三代测序平台推出的兼顾长读长和高准确度的测序序列，HiFi reads 具有 >99.9% （Q20）单分子 reads 准确度的准确率。
+
+## 3.1.1 Overview
+
+本研究基于PacBio Sequel II 平台共产生了75.66Gb的全长转录组数据，经过去除接头序列，去除低质量序列后，我们检测到了38,696,058条Subreads，Subreads的N50达到2164bp，平均长度达到了1955bp，筛选满足number of full passes >= 1,序列准确性大于0.9的subreads得到一致性序列，最终得到4,714,912条高质量的ROI （Figure 4 A and B），这些ROI被称为High fidelity reads （HiFi reads）经过统计，HiFi reads的长度范围约为300-7000，均值为1997bp. 质控的结果显示，HiFi reads的错误检出路普遍较低，均值为Q41（Table S4 Figure 4 B)。我们对HiFi reads进行分类，全长非嵌合转录本（full-length non-chimeric reads）占88.28%,这些全长非嵌合转录本的平均长度为1,947bp, N50为2,196bp，获得全长转录本后我们经过聚类和矫正最终得到324,703个高质量的转录本及4273个低质量的转录本。随后我们通过CD-hit对全长转录本去冗余最终得到了176643个高质量的非冗余转录本。此外，我们通过BUSCO软件使用绿色植物保守单拷贝基因数据库对黄精块茎的全长转录组组装数据进行了评估，我们发现83.6%的转录本是完整的, 说明我们三代全长转录组的数据可靠性较高。
+

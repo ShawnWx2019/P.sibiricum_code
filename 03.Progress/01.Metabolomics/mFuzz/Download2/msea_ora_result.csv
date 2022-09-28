@@ -1,0 +1,14 @@
+,total,expected,hits,Raw p,Holm p,FDR
+Steroid hormone biosynthesis,85,0.83,4,0.00746,0.627,0.627
+Biosynthesis of unsaturated fatty acids,36,0.352,2,0.0463,1,1
+Linoleic acid metabolism,5,0.0488,1,0.0479,1,1
+Sulfur metabolism,8,0.0781,1,0.0757,1,1
+Phenylalanine metabolism,10,0.0977,1,0.0937,1,1
+alpha-Linolenic acid metabolism,13,0.127,1,0.12,1,1
+Arginine biosynthesis,14,0.137,1,0.129,1,1
+Pantothenate and CoA biosynthesis,19,0.186,1,0.171,1,1
+Galactose metabolism,27,0.264,1,0.235,1,1
+"Glycine, serine and threonine metabolism",33,0.322,1,0.279,1,1
+Arachidonic acid metabolism,36,0.352,1,0.301,1,1
+Arginine and proline metabolism,38,0.371,1,0.314,1,1
+Pyrimidine metabolism,39,0.381,1,0.321,1,1
