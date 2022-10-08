@@ -16,7 +16,7 @@ if(getwd() == "/Users/shawn/My_Repo/P.sibiricum/01.src") {
 }
 
 library(DESeq2)
-
+library(PCAtools)
 
 # remove lncRNA -----------------------------------------------------------
 FPKM <- read.table("../../../02.Data/02.Pacbio_raw/merged.fpkm.xls",header = T,sep = "\t")
@@ -29,14 +29,16 @@ transdecoder <- read.delim("../../../02.Data/02.Pacbio_raw/transdecoder.list.xls
 
 expMat_clean <-
   inner_join(FPKM,transdecoder,"gene_id") %>%
-  select(gene_id,HJ.2y.3,HJ.2y.2,HJ.5y.3,
+  select(gene_id,
+         HJ.2y.3,HJ.2y.2,HJ.5y.3,
          HJ.4y.2,HJ.4y.1,HJ.7y.2,
          HJ.3y.3,HJ.3y.1,HJ.2y.1,
          HJ.4y.3,HJ.3y.2,
          HJ.Dy.2,HJ.Dy.3,
          HJ.7y.3,HJ.Dy.1) %>%
   setNames(
-    c("gene_id","Size_1_1","Size_1_2","Size_1_3",
+    c("gene_id",
+      "Size_1_1","Size_1_2","Size_1_3",
       "Size_2_1","Size_2_2","Size_2_3",
       "Size_3_1","Size_3_2","Size_3_3",
       "Size_4_1","Size_4_2",
@@ -61,8 +63,42 @@ count_clean <-
   ) %>%
   mutate_if(is.numeric,ceiling)
 write.table(count_clean,"../../../02.Data/02.Pacbio_raw/merged.readcount_clean.xls",row.names = F,sep = "\t")
+write.table(expMat_clean,"../../../02.Data/02.Pacbio_raw/merged.FPKM_clean.xls",row.names = F,sep = "\t")
 
 
+# PCA ---------------------------------------------------------------------
+exp_mat <-
+  expMat_clean %>%
+  column_to_rownames('gene_id')
+
+metadata <-
+  data.frame(
+    row.names = colnames(exp_mat),
+    group = gsub("..$","",colnames(exp_mat)),
+    stage = rep(c('Juvenal','Adult'),c(11,4))
+  )
+x_log <- exp_mat %>% +1 %>% log2()
+mat.pca <- pca(mat = x_log,metadata = metadata,center = T,scale = T,removeVar = .1)
+
+dist = dist(exp_mat %>% t() %>% +1 %>% log2())
+h_list = hclust(dist)
+pdf("transcript_hclust.pdf",width = 8,height = 8)
+plot(h_list)
+dev.off()
+#3D
+library(scatterplot3d)
+pdf("transcript_3D_PCA.pdf",width = 8,height = 8)
+scatterplot3d(
+  mat.pca$rotated[,c(1,2,3)],
+  xlab = paste0("PC1 (",round(mat.pca$variance[1],2),"%)"),
+  ylab = paste0("PC2 (",round(mat.pca$variance[2],2),"%)"),
+  zlab = paste0("PC3 (",round(mat.pca$variance[3],2),"%)"),
+  pch = 16,angle = 30,
+  box = T,cex.symbols = 2,lty.hide = 2,lty.grid = 2,
+  type = 'p',color = rep(rainbow(6),c(3,3,3,2,2,2))
+)
+legend("topleft",paste0("Size",1:6),fill = rainbow(6))
+dev.off()
 # DEanalysis --------------------------------------------------------------
 
 dir.create("DET",showWarnings = F,recursive = T)

@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.0.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Shawn Wang">
+<meta name="dcterms.date" content="2022-10-02">
+
+<title>转录组数据</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+<script src="03.2代转录组分析_files/libs/clipboard/clipboard.min.js"></script>
+<script src="03.2代转录组分析_files/libs/quarto-html/quarto.js"></script>
+<script src="03.2代转录组分析_files/libs/quarto-html/popper.min.js"></script>
+<script src="03.2代转录组分析_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="03.2代转录组分析_files/libs/quarto-html/anchor.min.js"></script>
+<link href="03.2代转录组分析_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="03.2代转录组分析_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="03.2代转录组分析_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="03.2代转录组分析_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="03.2代转录组分析_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">转录组数据</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Shawn Wang </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">October 2, 2022</p>
+    </div>
+  </div>
+    
+  </div>
+  
+
+</header>
+
+<center>
+<p><font color="salmon" size="2pt"> 🏡Zhang Lab, Aug 05, 2022 🏡</font></p>
+<p><font color="green" size="2pt"> 🔬Multi-omics research center, State Key Laboratory of Crop Stress Adaption and Improvement, HENU, Kaifeng, Henan 🔬</font></p>
+</center>
+<section id="ngs转录组分析" class="level1">
+<h1>2 NGS转录组分析</h1>
+<section id="方法" class="level2">
+<h2 class="anchored" data-anchor-id="方法">2.1 方法</h2>
+<ol type="1">
+<li><p>以三代全长转录本作为参考序列，将每个样品的clean reads（二代数据）比对回参考序列。该过程我们采用了<code>RSEM</code>软件，<code>RSEM</code>流程中选择使用<code>bowtie2</code>软件，参数为<code>bowtie2</code>默认参数. RSEM对bowtie的比对结果进行统计，进一步得到了每个样品比对到每个基因上的readcount 数目，并对其进行FPKM转换，进而分析基因的表达水平。</p></li>
+<li><p>材料间的相关性使用斯皮尔曼相关计算，PCA结果通过PCAtools包完成。</p></li>
+<li><p>差异比对软件使用的是<code>DESeq2</code>。</p></li>
+<li><p>使用所有差异表达的基因作为基因集合，然后通过<code>mFuzz</code>对这些基因进行分类，我们选择前期和后期差异明显的cluster进行后续分析。</p></li>
+<li><p>富集分析使用通过TBtools完成。</p></li>
+</ol>
+</section>
+<section id="结果" class="level2">
+<h2 class="anchored" data-anchor-id="结果">3.1 结果</h2>
+<section id="global-transcriptomic-changes-of-rhizome-of-p.-sibniricum-between-juvenal-and-adult" class="level3">
+<h3 class="anchored" data-anchor-id="global-transcriptomic-changes-of-rhizome-of-p.-sibniricum-between-juvenal-and-adult">3.1.1 Global transcriptomic changes of rhizome of <em>P. sibniricum</em> between juvenal and adult</h3>
+<p>为了搞清楚幼年黄精和成年黄精块茎在药效方面的差异，我们以3代全长转录组检测到的转录本为参考，将2代测序的clean reads比对回参考序列，对不同时期的野外黄精块茎样本进行精确的定性和定量。 结果表明平均每个样品产生了78.25 Mb的clean reads, 平均覆盖度为91.55% (Table S9)样品间的相关性表明分属juvenal组的样品和adult组的样品之间相关性较低。由于野外取样的原因，个体差异较为明显，生物学重复间的差异较大，特别是幼年材料，按大小划分整体不容易区分，对于成年材料来说，对于成年材料来说，size5和size6的生物学重复较好，但两者间的相关性非常低，说明差异较大（Figure5 A）,同时，我们对log2转换后的FPKM值计算了欧式距离，并进行了层级聚类，距离方法为<code>complete</code>,同时也做了PCA分析，结果显示不同年份的材料较好的聚集在一起(Figure S5 A,B)，且Size5和其他材料差异较大。 为了研究不同年份黄精之间的差异，我们对他们做了成对的差异分析，与材料相关性分析结果一致，size5和size6与其他组合差异基因数量最多，同时size5和size6之间也存在较大差异。综上，我们发现在转录水平幼年黄精和成年黄精间确实存在明显差异，而两个成年黄精材料间也存在较为明显的差异，尽管幼年黄精间可能由于个体差异的关系生物学重复不太理想，造成重复间相关性较低，但是在压缩数据变异度后（对FPKM取log）不同大小的黄精块茎材料间的差异还是被凸显出来，所以通过经验判断黄精年份的方法确实存在一定问题，但是在转录水平确实体现出一定的趋势，同时在如此大的个体差异存在的情况下，幼年黄精和成年黄精间显著的差异表明黄精在生长发育到一定阶段后，块茎内正在进行的生物学过程及代谢途径确实发生了显著的改变。从幼年黄精和成年黄精材料的转录及代谢数据中去规避个体差异造成的影响从而挖掘真实的年份积累造成的差异成为本研究关注的重点。</p>
+<div id="fig5.DEG_overview" class="quarto-layout-panel">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: center;">
+<div id="Def" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="Fig5.DEG_overview.png" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">Figure5.DEG.overview</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: center;">
+<div id="Def" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="FigS5.NGS_Trans_Overview.png" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">FigureS5.DEG.overview2</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="time-course-transcriptome-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="time-course-transcriptome-analysis">3.1.2 Time course transcriptome analysis</h2>
+<p>为了更好的了解</p>
+<div id="fig6.mFuzz" class="quarto-layout-panel">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: center;">
+<div id="Def" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="Fig6.mFuzz.png" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">Figure6.mFuzz</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      let href = ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

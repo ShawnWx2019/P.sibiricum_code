@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Shawn Wang">
-<meta name="dcterms.date" content="2022-08-22">
+<meta name="dcterms.date" content="2022-09-30">
 
 <title>三代测序</title>
 <style>
@@ -17,6 +17,25 @@ span.underline{text-decoration: underline;}
 div.column{display: inline-block; vertical-align: top; width: 50%;}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
 </style>
 
 
@@ -59,7 +78,7 @@ ul.task-list{list-style: none;}
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">August 22, 2022</p>
+      <p class="date">September 30, 2022</p>
     </div>
   </div>
     
@@ -100,8 +119,39 @@ ul.task-list{list-style: none;}
 </section>
 <section id="信息分析流程" class="level1">
 <h1>2.2 信息分析流程</h1>
-<p>PacBio Sequel平台或RSII平台对不同长度的cDNA文库进行测序，得到大量的下机数据，称为Raw reads。我们首先对Raw</p>
-<p>reads进行质控和过滤，去除低质量和读长较短的reads。过滤后的reads通过分类、聚类和矫正可以获得高质量的全长转录本；由于全长转录本聚类较为严格，为了去除冗余的转录本，采用CD-HIT软件对全长转录本去冗余。得到非冗余的全长转录本后，一方面可以对全长转录本进行编码区(CDS)的预测以及功能注释；另一方面也可以对转录本序列进行Isoform、基因家族、SSR、可变剪切、lncRNA等分析。</p>
+<section id="插入序列质控" class="level2">
+<h2 class="anchored" data-anchor-id="插入序列质控">2.2.1 插入序列质控：</h2>
+<p>对于测序下机的数据，首先过滤掉接头和低质量序列，得到Subreads。筛选满足number of full passes&gt;=1，序列准确性大于0.9的Subreads得到一致性序列，即是每个ZMW小孔的插入序列(Reads of Insert,简称ROI)。</p>
+</section>
+<section id="转录本的分类" class="level2">
+<h2 class="anchored" data-anchor-id="转录本的分类">2.2.2 转录本的分类：</h2>
+<p>对于上一步获得的ROI，按照是否含有3´引物和5´引物，及3´引物前是否含有polyA尾将ROI分为全长转录本和非全长转录本；按照序列内部有无测序引物将ROI分为嵌合转录本和非嵌合转录本；对ROI分类后，取全长非嵌合的转录本进行聚类，去掉一部分冗余的转录本；为了提高序列的准确性，聚类后的全长非嵌合转录本可以用非全长的转录本进行序列矫正。</p>
+</section>
+<section id="转录本的聚类和矫正" class="level2">
+<h2 class="anchored" data-anchor-id="转录本的聚类和矫正">2.2.3 转录本的聚类和矫正：</h2>
+<p>获得全长转录本后，由于全长转录本中可能存在很多重复的转录本，我们需要对转录本进行聚类。通过ICE(isoform-level clustering algorithm)算法对全长转录本序列进行迭代聚类，将相似的序列聚类到一簇cluster，每个cluster得到一个一致转录本。<br>
+结合非全长序列，使用矫正(polish)程序对各cluster中的一致序列进行校正。得到准确度大于99%的高质量转录本(HQ,high-quality isoforms)和低质量转录本(LQ,low-quality)转录本。</p>
+</section>
+<section id="全长转录本去冗余" class="level2">
+<h2 class="anchored" data-anchor-id="全长转录本去冗余">2.2.4 全长转录本去冗余：</h2>
+<p>由于全长转录本在聚类过程中参数设置较严格，为得到质量较高的一致转录本序列，同一转录本的多拷贝序列分到不同cluster的可能性较大，会产生一些冗余的序列。同时，全长转录本测序过程中，由于3’端存在poly-A结构，可以确定3’端比较完整，而5’端序列容易降解，导致同一转录本的不同拷贝分到不同的cluster中，如下图绿色圈中所示，5’端差异造成不同转录本，导致冗余序列的产生。此外，不同长度的cDNA文库之间也可能存在重复的序列，亦会产生冗余的序列。 对于无参全长转录组，我们采用CD-HIT软件对高质量全长转录本进一步去冗余(参数：c=0.99、T=6、G=1、U=10、s=0.999、d=40、p=1)，去冗余后得到非冗余的高质量转录本。</p>
+</section>
+<section id="转录本注释" class="level2">
+<h2 class="anchored" data-anchor-id="转录本注释">2.2.5 转录本注释：</h2>
+<p>为了得到全长转录本的功能信息，我们将高质量的全长转录本序列分别与NT、NR、GO、KOG、KEGG、Swissprot等数据库进行比对，比对完根据E-value &lt; 1E5进行筛选，选择得分最高的（top hit）annotation进行保留。</p>
+<p>  Nt(NCBI nucleotide sequences)是NCBI官方的核酸序列数据库，包括了GenBank,EMBL和DDBJ（但不包括 EST,STS,GSS,WGS,TSA,PAT,HTG序列）的核酸序列。</p>
+<p>  Nr(NCBI non-redundant protein sequences)是NCBI官方的蛋白序列数据库，它包括了GenBank 基因的蛋白编码序列，PDB(Protein Data Bank)蛋白数据库、SwissProt蛋白序列及来自PIR（Protein Information Resource）和PDF（Protein Research Foundation）等数据库的蛋白序列。</p>
+<p>  Swiss-Prot(A manually annotated and reviewed protein sequence database)搜集了经过有经验的生物学家整理及研究的蛋白序列。详见 http://www.ebi.ac.uk/uniprot/。</p>
+<p>  Gene Ontology（简称 GO）是一个国际标准化的基因功能分类体系，提供了一套动态更新的标准词（controlled vocabulary）来全面描述生物体中基因和基因产物的属性。</p>
+<p>  KEGG是Kyoto Encyclopedia of Genes and Genomes的简称，是系统分析基因产物和化合物在细胞中的代谢途径以及这些基因产物的功能的数据库。KEGG是Kyoto Encyclopedia of Genes and Genomes的简称，是系统分析基因产物和化合物在细胞中的代谢途径以及这些基因产物的功能的数据库。它整合了基因组、化学分子和生化系统等方面的数据，包括代谢通路（KEGG PATHWAY）、药物（KEGG DRUG）、疾病（KEGG DISEASE）、功能模型（KEGG MODULE）、基因序列（KEGG GENES）及基因组（KEGG GENOME）等等。详见 http://www.genome.jp/kegg/。</p>
+<p>  KOG和COG都是基于基因直系同源关系，其中COG针对原核生物，KOG针对真核生物。COG/KOG结合进化关系将来自不同物种的同源基因分为不同的Ortholog簇。来自同一ortholog的基因具有相同的功能，这样就可以将功能注释直接继承给同一COG/KOG簇的其他成员。详见http://www.ncbi.nlm.nih.gov/COG/。   </p>
+</section>
+<section id="cds预测" class="level2">
+<h2 class="anchored" data-anchor-id="cds预测">2.2.6 CDS预测：</h2>
+<p>基于序列上的翻译阅读框，我们采用TransDecoder软件对去冗余后的高质量全长转录本进行CDS预测，预测后的CDS结果以fasta文件格式保存。<br>
+  TransDecoder计算并比较6个翻译框的编码可能性值（coding likelihood score），找出能编码100个氨基酸以上的CDS；当翻译框的编码可能性值较低时，还可以根据同已知蛋白数据库（Pfam、 SwissProt）的同源搜索结果作为保留翻译框的依据。<br>
+  </p>
+</section>
 </section>
 <section id="全长转录组测序" class="level1">
 <h1>3.1 全长转录组测序</h1>
@@ -189,11 +239,193 @@ ul.task-list{list-style: none;}
 </section>
 <section id="overview" class="level2">
 <h2 class="anchored" data-anchor-id="overview">3.1.1 Overview</h2>
-<p>本研究基于PacBio Sequel II CNDx平台共产生了70.47Gb的全长转录组数据，其中包括了 38,696,058条subreads，去冗余后产生了</p>
+<p>本研究基于PacBio Sequel II 平台共产生了75.66Gb的全长转录组数据，经过去除接头序列，去除低质量序列后，我们检测到了38,696,058条Subreads，Subreads的N50达到2164bp，平均长度达到了1955bp，筛选满足number of full passes &gt;= 1,序列准确性大于0.9的subreads得到一致性序列，最终得到4,714,912条高质量的ROI （Figure 4 A and B），这些ROI被称为High fidelity reads （HiFi reads）经过统计，HiFi reads的长度范围约为300-7000，均值为1997bp. 质控的结果显示，HiFi reads的错误检出路普遍较低，均值为Q41（Table S4 Figure 4 B)。我们对HiFi reads进行分类，全长非嵌合转录本（full-length non-chimeric reads）占88.28%,这些全长非嵌合转录本的平均长度为1,947bp, N50为2,196bp，获得全长转录本后我们经过聚类和矫正最终得到324,703个高质量的转录本及4273个低质量的转录本。随后我们通过CD-hit对全长转录本去冗余最终得到了176643个高质量的非冗余转录本。此外，我们通过BUSCO软件使用绿色植物保守单拷贝基因数据库对黄精块茎的全长转录组组装数据进行了评估，结果表明在数据库中的425个单拷贝基因在我们的数据中有355/356(去冗余/全部)个基因是完整的，占比为84%（Figure 4 C, TableS4, TableS5），说明测序质量良好。</p>
+<div id="fig-batcheffect" class="quarto-layout-panel">
+<figure class="figure">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: center;">
+<div id="Figure4-Overview" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="Fig4.Pacbio_overview.png" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">Figure 4 Overview of full-length transcriptome</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<p></p><figcaption class="figure-caption">Figure 2: <strong>Figure legend:</strong> Construction of the multi-flux full-length transcriptome of <em>P. sibiricum</em>. (A) Length distribution of HiFi reads. (B) Quality distribution of HiFi reads. (C) BUSCO evaluation of the transcriptome completeness. (D) Annotation of the full-length nonredundant isoforms to multiple databases.</figcaption><p></p>
+</figure>
+</div>
 </section>
+<section id="functional-annotation" class="level2">
+<h2 class="anchored" data-anchor-id="functional-annotation">3.1.2 Functional annotation</h2>
+<p>在所有非冗余的isoform中，143,998(81.19%)被至少一个数据库注释。其中至少被3个数据库注释到的isoform数量为108,732(61.55%)(Figure 4 D,Table S6)。注释到各个数据库的非冗余isoform数量如下：NR：140,472(97.56%), NT:113,682(78.95%), Swissprot:99,764(69.28%),KEGG:74,662(51.85%),KOG:62,479(43.39%)以及GO: 48,043(33.36%). 在注释覆盖度最全的NR注释中我们发现有86,970个isoform注释来源于<em>Asparagus officinalis</em>，占所有非冗余isoform的60.4%，而来源于其他物种的注释占比均不到5%（TableS7）,其中我们发现这些isoform匹配到13个黄精属（<em>Polygonatum</em>）注释,依次为：<em>Polygonatum verticillatum</em>（158），<em>Polygonatum sibiricum</em>（121），<em>Polygonatum cyrtonema</em> （53），<em>Polygonatum multiflorum</em>（46），<em>Polygonatum odoratum</em> （29），<em>Polygonatum pubescens </em> （12），<em>Polygonatum humile</em> （7）<em>Polygonatum sp. JJ-2020</em> （7），<em>Polygonatum zanlanscianense</em>（6），<em>Polygonatum kingianum</em>（4），<em>Polygonatum stenophyllum</em>（3），<em>Polygonatum cirrhifolium</em> （2），<em>Polygonatum roseum</em>（1）,序列同源性范围在37.99%-100%, 其中平均序列同源度较高的物种为<em>Polygonatum cirrhifolium</em> （99.6%），<em>Polygonatum verticillatum</em> （99.4%）,<em>Polygonatum stenophyllum</em> (99.3%),<em>Polygonatum sibiricum</em>(98.7%)等，较低的为<em>Polygonatum multiflorum</em>（69.0%），<em>Polygonatum roseum</em> （70.6%）以及<em>Polygonatum cyrtonema</em>（86.0%）TableS。</p>
+<p>为了确定这些isoform可能影响的代谢通路，我们对KOG、KEGG、GO数据库的注释进行了分类。在KOG数据库中，我们发现62,479 isoforms 被分到4个大类中，4大类下又分了25个小类，其中注释到cellular processes and signaling大类的isoform有15,947个，而该大类中注释最多的类别为Signal transduction mechanisms和intracellular trafficking,secretion,and vesicular transport。注释到metabolism大类的isoform有10,589个，注释最多的两个term为Transcription以及Translation ribosomal structure and biogenesis.注释到Information storage and processing的有9,359个,其中Carbohydrate transport and metabolism和Energy production and conversion，Poorly Characterized以及无法分类的共有26,557个。共有48,043个isoform被注释到GO数据库中，其中biological process term注释到，其中KEGG共注释到74,622个isoform，根据KEGG层级结构这些注释被分配到5个最高层级(top hierarchy)：Cellular Processes(3,450), Environmental Information Processing(2,363), Genetic Information Processing(17,533), Metabolism(24,555),Organismal Systems(2,083), 而聚集最多的次层级(Second hierarchy)为Translation,有13.8%的isoform被注释到与蛋白质翻译(Translation)的pathway有关，接下来是KEGG term: Folding, sorting and degradation，占到总数的10.8% (Figure S3). 我们对这些高质量的全长转录本进行CDS预测，结果表明72.5% (128,026)的isoform可以预测到CDS序列,这些CDS序列的长度在主要集中在300-4000 nt之间(Figure S4 A),除此之外我们还预测了这些非冗余全长转录本的编码能力，最终我们发现有41.5% (73,175)的转录本符合长链非编码RNA（lncRNA）的特征，在这些candidate lncRNA中，有39,867的转录本中可能有CDS区域，占非冗余全长转录本的22.6%，而33,308的转录本不具有预测的CDS区域(Figure S4 B)。大部分的lncRNA范围在300-4000 nt (Figure S4 C). 除此之外，还有8.7%的全长转录本既无法预测到CDS区域，也不属于lncRNA，这些非冗余转录本被称为Transcript of Unknown Coding Potential (TUCP)<span class="citation" data-cites="cabiliIntegrativeAnnotationHuman2011">Cabili et al. (<a href="#ref-cabiliIntegrativeAnnotationHuman2011" role="doc-biblioref">2011</a>)</span> (Figure S4 B).综上，这些数据证明在转录水平我们构建了丰富的，准确的转录本池（Transcript pool）为后续的黄精块茎的转录组研究。</p>
+</section>
+</section>
+<section id="讨论" class="level1">
+<h1>4.讨论</h1>
+<section id="我们通过三代全长转录组测序得到了高质量的黄精转录本信息" class="level2">
+<h2 class="anchored" data-anchor-id="我们通过三代全长转录组测序得到了高质量的黄精转录本信息">4.1 我们通过三代全长转录组测序得到了高质量的黄精转录本信息。</h2>
+<p>由于缺乏参考基因组，通过转录组解析黄精块茎药用价值的研究只能通过无参转录组来进行，一部分研究基于Illumina平台的2代测序 <span class="citation" data-cites="fengTranscriptomeAnalysisDifferent2022">Feng et al. (<a href="#ref-fengTranscriptomeAnalysisDifferent2022" role="doc-biblioref">2022</a>)</span> <span class="citation" data-cites="wangNovoAssemblyAnalysis2017">Wang et al. (<a href="#ref-wangNovoAssemblyAnalysis2017" role="doc-biblioref">2017</a>)</span>，还有一些基于PacBio平台3代全长转录组测序 <span class="citation" data-cites="liaoTranscriptomeProfilesRevealed2021">Liao et al. (<a href="#ref-liaoTranscriptomeProfilesRevealed2021" role="doc-biblioref">2021</a>)</span> . 就测序质量而言，本研究subreads的N50达到了2164bp，高于二代测序的1532 bp <span class="citation" data-cites="wangNovoAssemblyAnalysis2017">Wang et al. (<a href="#ref-wangNovoAssemblyAnalysis2017" role="doc-biblioref">2017</a>)</span> 1528 bp, <span class="citation" data-cites="fengTranscriptomeAnalysisDifferent2022">Feng et al. (<a href="#ref-fengTranscriptomeAnalysisDifferent2022" role="doc-biblioref">2022</a>)</span> 略低于同样为三代测序的3166 bp <span class="citation" data-cites="liaoTranscriptomeProfilesRevealed2021">Liao et al. (<a href="#ref-liaoTranscriptomeProfilesRevealed2021" role="doc-biblioref">2021</a>)</span> 。本研究提供了高达176,643个非冗余序列，该数量要高于之前的黄精转录组鉴定的数量，<span class="citation" data-cites="liaoTranscriptomeProfilesRevealed2021">Liao et al. (<a href="#ref-liaoTranscriptomeProfilesRevealed2021" role="doc-biblioref">2021</a>)</span> 鉴定到87,251个unigene, <span class="citation" data-cites="wangNovoAssemblyAnalysis2017">Wang et al. (<a href="#ref-wangNovoAssemblyAnalysis2017" role="doc-biblioref">2017</a>)</span> 鉴定到51,461个unigene，少于 <span class="citation" data-cites="fengTranscriptomeAnalysisDifferent2022">Feng et al. (<a href="#ref-fengTranscriptomeAnalysisDifferent2022" role="doc-biblioref">2022</a>)</span> 鉴定到的575,977个。此外，就序列同源性注释而言，60%的非冗余基因注释到<em>Asparagus officinalis</em>的结论与之前的研究是一致的，但不同的是，<span class="citation" data-cites="liaoTranscriptomeProfilesRevealed2021">Liao et al. (<a href="#ref-liaoTranscriptomeProfilesRevealed2021" role="doc-biblioref">2021</a>)</span> 等人的研究中与黄精属(<em>Polygonatum</em>)同源基因最多的是<em>P. cyrtonema</em> 和<em>P. multiflorum</em>，而本研究中最多的是<em>P. verticillatum</em>和<em>P. sibiricum</em>，接下来才是<em>P. cyrtonema</em> 和<em>P. multiflorum</em>。综上，我们从不同年份黄精块茎的三代全长转录组数据中获得了丰富的转录本，和前人的研究相比，测序质量较高，注释无明显偏倚，为后续黄精块茎转录组研究提供了高质量的转录本数据库。</p>
+</section>
+</section>
+<section id="figure-preview" class="level1">
+<h1>Figure preview</h1>
+<div id="fig-batcheffect" class="quarto-layout-panel">
+<figure class="figure">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: center;">
+<div id="Figure1-Overview" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="FigS3.Annotation.png" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">Figure S3 Function annotation</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<p></p><figcaption class="figure-caption">Figure 3: <strong>?(caption)</strong></figcaption><p></p>
+</figure>
+</div>
+<div id="fig-batcheffect" class="quarto-layout-panel">
+<figure class="figure">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: center;">
+<div id="Figure1-Overview" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="FigS4.non_redundant.png" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">Figure S4 non-redundant length</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<p></p><figcaption class="figure-caption">Figure 4: <strong>?(caption)</strong></figcaption><p></p>
+</figure>
+</div>
+</section>
+<section id="table-preview" class="level1">
+<h1>Table preview</h1>
+<center>
+<p><strong>Table S4. BUSCO non-redundant result.</strong></p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>√ Successfully imported: 786 obs. of 7 variables</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+      Busco id   Status                 Sequence              Score Length                                   OrthoDB url                                Description
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+2  1363at33090 Complete HJ_1-10k_transcript_1448 1599.5               1125 https://www.orthodb.org/v10?query=1363at33090 UDP-glucose                               
+3  1419at33090 Complete HJ_1-10k_transcript_198  1820.8               1482 https://www.orthodb.org/v10?query=1419at33090 E3 ubiquitin-protein ligase listerin      
+4  1855at33090 Complete HJ_1-10k_transcript_75   2273.6               1704 https://www.orthodb.org/v10?query=1855at33090 thyroid adenoma-associated protein homolog
+5  4004at33090 Complete HJ_1-10k_transcript_4192 1537.8               1113 https://www.orthodb.org/v10?query=4004at33090 splicing factor 3B subunit 3              
+6  5927at33090 Complete HJ_1-10k_transcript_8546 1246.4000000000001   982  https://www.orthodb.org/v10?query=5927at33090 Armadillo-type fold                       
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────</code></pre>
+</div>
+</div>
+</center>
+<center>
+<p><strong>Table S5. BUSCO all result.</strong></p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>√ Successfully imported: 983 obs. of 7 variables</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+       Busco id   Status                   Sequence              Score Length                                    OrthoDB url                                Description
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+2  1855at33090  Complete HJ_1-10k_transcript_75     2273.6               1704 https://www.orthodb.org/v10?query=1855at33090  thyroid adenoma-associated protein homolog
+3  6843at33090  Complete HJ_1-10k_transcript_29637  1372.4               810  https://www.orthodb.org/v10?query=6843at33090  Thioredoxin-like fold                     
+4  9058at33090  Complete HJ_1-10k_transcript_2767   1064.3               1058 https://www.orthodb.org/v10?query=9058at33090  XPG/Rad2 endonuclease                     
+5  13039at33090 Complete HJ_1-10k_transcript_42870  1260.0999999999999   703  https://www.orthodb.org/v10?query=13039at33090 Aminoacyl-tRNA synthetase, class Ia       
+6  18455at33090 Complete HJ_1-10k_transcript_136866 805.9                556  https://www.orthodb.org/v10?query=18455at33090 WD40-repeat-containing domain             
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────</code></pre>
+</div>
+</div>
+</center>
+<center>
+<p><strong>Table S6. Transcript annotation.</strong></p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>√ Successfully imported: 144000 obs. of 22 variables</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+                     X.GeneID GOTerms_num                                                                                                                                                                             GO_Anno    KEGG_entry                                          KEGG_url KOG_class                                         KOG_class_annotation          NR_ID  E_value       Identity Score                                                     Annotation          NT_ID E_value.1       Identity.1 Score.1                                                                                                      Annotation.1          Swissprot_ID E_value.2     Identity.2 Score.2                                                                   Annotation.2
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+1  HJ_1-10k_transcript/318534          3  GO:0003676: nucleic acid binding (molecular_function); GO:0004386: helicase activity (molecular_function); GO:0005524: ATP binding (molecular_function);                            K14811|DBP3   http://www.genome.jp/dbget-bin/www_bget?ko:K14811       --  --                                                           ONK71543.1     8.8e-40  83/86(96.51)    169  uncharacterized protein A4U43_C04F9720 [Asparagus officinalis] KY534737.1        5e-106 243/258(94.19)      394  Asparagus officinalis AT5G58760 mRNA, partial sequence                                                            sp|Q9C551|RH5_ARATH    1.0e-36  77/86(89.53)      154  DEAD-box ATP-dependent RNA helicase 5 OS=Arabidopsis thaliana GN=RH5 PE=1 SV=1
+2  HJ_1-10k_transcript/194098          -- --                                                                                                                                                                                  K17592|SACS   http://www.genome.jp/dbget-bin/www_bget?ko:K17592       --  --                                                           --             --       --              --   --                                                             --                --     --                  --   --                                                                                                                --                     --       --                --   --                                                                            
+3  HJ_1-10k_transcript/308305          1  GO:0005509: calcium ion binding (molecular_function);                                                                                                                               K02183|CALM   http://www.genome.jp/dbget-bin/www_bget?ko:K02183       [T] Signal transduction mechanisms                               XP_020107878.1 1.2e-52  151/169(89.35)  213  uncharacterized protein LOC109723805 [Ananas comosus]          XM_006654516.2    3e-169 415/458(90.61)      604  PREDICTED: Oryza brachyantha calmodulin-2 (LOC102710699), mRNA                                                    sp|P62200|CALM1_DAUCA  1.1e-52  147/149(98.66)    208  Calmodulin-1/11/16 OS=Daucus carota GN=CAM-1 PE=2 SV=2                        
+4  HJ_1-10k_transcript/130707          3  GO:0005524: ATP binding (molecular_function); GO:0032440: 2-alkenal reductase [NAD(P)] activity (molecular_function); GO:0055114: oxidation-reduction process (biological_process); K03283|HSPA1s http://www.genome.jp/dbget-bin/www_bget?ko:K03283       [O] Posttranslational modification, protein turnover, chaperones AIZ68155.1     0.0e+00  597/628(95.06)  1122 heat shock protein 70 [Albuca bracteata]                       KM510491.1        0.0    1805/2051(88.01)    2409 Ornithogalum longebracteatum heat shock protein 70 (HSP70-3) mRNA, complete cds                                   sp|P27322|HSP72_SOLLC  0.0e+00  568/627(90.59)    1078 Heat shock cognate 70 kDa protein 2 OS=Solanum lycopersicum GN=HSC-2 PE=2 SV=1
+5  HJ_1-10k_transcript/45073           -- --                                                                                                                                                                                  --            --                                                      --  --                                                           XP_010930642.1 2.4e-252 652/905(72.04)  878  transcriptional corepressor SEUSS [Elaeis guineensis]          XM_026809779.2    0.0    2075/2736(75.84)    1293                                                                                                                   sp|Q8W234|SEUSS_ARATH  1.5e-141 508/946(53.70)    505  Transcriptional corepressor SEUSS OS=Arabidopsis thaliana GN=SEU PE=1 SV=1    
+6  HJ_1-10k_transcript/268244          -- --                                                                                                                                                                                  --            --                                                      --  --                                                           XP_020256179.1 3.8e-118 230/294(78.23)  431  protein WRKY1-like [Asparagus officinalis]                     XM_020400592.1    0.0    739/890(83.03)      776  PREDICTED: Asparagus officinalis protein WRKY1-like (LOC109833049), transcript variant X3, mRNA                   sp|Q32SG4|WRKY1_MAIZE  2.0e-70  141/221(63.80)    267  Protein WRKY1 OS=Zea mays PE=1 SV=1                                           
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────</code></pre>
+</div>
+</div>
+</center>
+<center>
+<p><strong>Table S7. Isoforms matched with Polygonatum species in NR database.</strong></p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>√ Successfully imported: 807 obs. of 3 variables</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>────────────────────────────────────────────────────────────
+                              Annotation    count percentage
+────────────────────────────────────────────────────────────
+1  Asparagus officinalis                 86970.00       0.60
+2  Phoenix dactylifera                    6148.00       0.04
+3  Elaeis guineensis                      6044.00       0.04
+4  Not annotated                          3528.00       0.02
+5  Cocos nucifera                         2216.00       0.02
+6  Dioscorea cayenensis subsp. rotundata  1829.00       0.01
+────────────────────────────────────────────────────────────</code></pre>
+</div>
+</div>
+</center>
+<center>
+<p><strong>Table S8. Isoforms matched with Polygonatum species in NR database.</strong></p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>√ Successfully imported: 13 obs. of 3 variables</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>───────────────────────────────────────────────────
+                        Species Identity hit number
+───────────────────────────────────────────────────
+1   Polygonatum multiflorum        68.97      46.00
+2   Polygonatum roseum             70.59       1.00
+3   Polygonatum cyrtonema          86.04      53.00
+4   Polygonatum kingianum          90.41       4.00
+5   Polygonatum pubescens          91.97      12.00
+6   Polygonatum humile             93.15       7.00
+7   Polygonatum odoratum           94.90      29.00
+8   Polygonatum sp. JJ-2020        97.89       7.00
+9   Polygonatum zanlanscianense    98.33       6.00
+10  Polygonatum sibiricum          98.73     121.00
+11  Polygonatum stenophyllum       99.29       3.00
+12  Polygonatum verticillatum      99.38     158.00
+13  Polygonatum cirrhifolium       99.60       2.00
+───────────────────────────────────────────────────</code></pre>
+</div>
+</div>
+</center>
+
 </section>
 
-</main>
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="doc-bibliography">
+<div id="ref-cabiliIntegrativeAnnotationHuman2011" class="csl-entry" role="doc-biblioentry">
+Cabili, Moran N., Cole Trapnell, Loyal Goff, Magdalena Koziol, Barbara Tazon-Vega, Aviv Regev, and John L. Rinn. 2011. <span>“Integrative Annotation of Human Large Intergenic Noncoding <span>RNAs</span> Reveals Global Properties and Specific Subclasses.”</span> <em>Genes &amp; Development</em> 25 (18): 1915–27. <a href="https://doi.org/10.1101/gad.17446611">https://doi.org/10.1101/gad.17446611</a>.
+</div>
+<div id="ref-fengTranscriptomeAnalysisDifferent2022" class="csl-entry" role="doc-biblioentry">
+Feng, Tinghui, Yujie Jiang, Qiaojun Jia, Ruilian Han, Dekai Wang, Xuemin Zhang, and Zongsuo Liang. 2022. <span>“Transcriptome <span>Analysis</span> of <span>Different Sections</span> of <span>Rhizome</span> in <span>Polygonatum</span> Sibiricum <span>Red</span>. And <span>Mining Putative Genes Participate</span> in <span>Polysaccharide Biosynthesis</span>.”</span> <em>Biochemical Genetics</em> 60 (5): 1547–66. <a href="https://doi.org/10.1007/s10528-022-10183-x">https://doi.org/10.1007/s10528-022-10183-x</a>.
+</div>
+<div id="ref-liaoTranscriptomeProfilesRevealed2021" class="csl-entry" role="doc-biblioentry">
+Liao, Dengqun, Ruipeng An, Jianhe Wei, Dongmei Wang, Xianen Li, and Jianjun Qi. 2021. <span>“Transcriptome Profiles Revealed Molecular Mechanisms of Alternating Temperatures in Breaking the Epicotyl Morphophysiological Dormancy of <span>Polygonatum</span> Sibiricum Seeds.”</span> <em>BMC Plant Biology</em> 21 (1): 370. <a href="https://doi.org/10.1186/s12870-021-03147-7">https://doi.org/10.1186/s12870-021-03147-7</a>.
+</div>
+<div id="ref-wangNovoAssemblyAnalysis2017" class="csl-entry" role="doc-biblioentry">
+Wang, Shiqiang, Bin Wang, Wenping Hua, Junfeng Niu, Kaikai Dang, Yi Qiang, and Zhezhi Wang. 2017. <span>“De <span>Novo Assembly</span> and <span>Analysis</span> of <span>Polygonatum</span> Sibiricum <span>Transcriptome</span> and <span>Identification</span> of <span>Genes Involved</span> in <span>Polysaccharide Biosynthesis</span>.”</span> <em>International Journal of Molecular Sciences</em> 18 (9): 1950. <a href="https://doi.org/10.3390/ijms18091950">https://doi.org/10.3390/ijms18091950</a>.
+</div>
+</div></section></div></main>
 <!-- /main column -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
