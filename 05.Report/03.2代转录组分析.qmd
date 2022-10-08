@@ -33,22 +33,36 @@ bibliography: PosDocProject.bib
 
 ### 3.1.1 Global transcriptomic changes of rhizome of *P. sibniricum* between juvenal and adult
 
-为了搞清楚幼年黄精和成年黄精块茎在药效方面的差异，我们以3代全长转录组检测到的转录本为参考，将2代测序的clean reads比对回参考序列，对不同时期的野外黄精块茎样本进行精确的定性和定量。 结果表明平均每个样品产生了78.25 Mb的clean reads, 平均覆盖度为91.55% (Table S9)样品间的相关性表明分属juvenal组的样品和adult组的样品之间相关性较低。由于野外取样的原因，个体差异较为明显，生物学重复间的差异较大，特别是幼年材料，按大小划分整体不容易区分，对于成年材料来说，对于成年材料来说，size5和size6的生物学重复较好，但两者间的相关性非常低，说明差异较大（Figure5 A）,同时，我们对log2转换后的FPKM值计算了欧式距离，并进行了层级聚类，距离方法为`complete`,同时也做了PCA分析，结果显示不同年份的材料较好的聚集在一起(Figure S5 A,B)，且Size5和其他材料差异较大。
-为了研究不同年份黄精之间的差异，我们对他们做了成对的差异分析，与材料相关性分析结果一致，size5和size6与其他组合差异基因数量最多，同时size5和size6之间也存在较大差异。综上，我们发现在转录水平幼年黄精和成年黄精间确实存在明显差异，而两个成年黄精材料间也存在较为明显的差异，尽管幼年黄精间可能由于个体差异的关系生物学重复不太理想，造成重复间相关性较低，但是在压缩数据变异度后（对FPKM取log）不同大小的黄精块茎材料间的差异还是被凸显出来，所以通过经验判断黄精年份的方法确实存在一定问题，但是在转录水平确实体现出一定的趋势，同时在如此大的个体差异存在的情况下，幼年黄精和成年黄精间显著的差异表明黄精在生长发育到一定阶段后，块茎内正在进行的生物学过程及代谢途径确实发生了显著的改变。从幼年黄精和成年黄精材料的转录及代谢数据中去规避个体差异造成的影响从而挖掘真实的年份积累造成的差异成为本研究关注的重点。
+为了搞清楚幼年黄精和成年黄精块茎在药效方面的差异，我们以3代全长转录组检测到的转录本为参考，将2代测序的clean reads比对回参考序列，对不同时期的野外黄精块茎样本进行精确的定性和定量。 结果表明平均每个样品产生了78.25 Mb的clean reads, 平均覆盖度为91.55% (Table S9)样品间的相关性表明分属juvenal组的样品和adult组的样品之间相关性较低。由于野外取样的原因，个体差异较为明显，生物学重复间的差异较大，特别是幼年材料，按大小划分整体不容易区分，对于成年材料来说，对于成年材料来说，size5和size6的生物学重复较好，但两者间的相关性非常低，说明差异较大（Figure5 A）,同时，我们对log2转换后的FPKM值计算了欧式距离，并进行了层级聚类，距离方法为`complete`,同时也做了PCA分析，结果显示不同年份的材料较好的聚集在一起(Figure S5 A,B)，且Size5和其他材料差异较大。 为了研究不同年份黄精之间的差异，我们对他们做了成对的差异分析，与材料相关性分析结果一致，size5和size6与其他组合差异基因数量最多，同时size5和size6之间也存在较大差异。综上，我们发现在转录水平幼年黄精和成年黄精间确实存在明显差异，而两个成年黄精材料间也存在较为明显的差异，尽管幼年黄精间可能由于个体差异的关系生物学重复不太理想，造成重复间相关性较低，但是在压缩数据变异度后（对FPKM取log）不同大小的黄精块茎材料间的差异还是被凸显出来，所以通过经验判断黄精年份的方法确实存在一定问题，但是在转录水平确实体现出一定的趋势，同时在如此大的个体差异存在的情况下，幼年黄精和成年黄精间显著的差异表明黄精在生长发育到一定阶段后，块茎内正在进行的生物学过程及代谢途径确实发生了显著的改变。从幼年黄精和成年黄精材料的转录及代谢数据中去规避个体差异造成的影响从而挖掘真实的年份积累造成的差异成为本研究关注的重点。
 
-::: {#fig5.DEG_overview layout-nrow="2"}  
+::: {#fig5.DEG_overview layout-nrow="2"}
+![Figure5.DEG.overview](Fig5.DEG_overview.png){#Def}
 
-![Figure5.DEG.overview](Fig5.DEG_overview.png){#Def}  
-
-![FigureS5.DEG.overview2](FigS5.NGS_Trans_Overview.png){#Def} 
+![FigureS5.DEG.overview2](FigS5.NGS_Trans_Overview.png)
 :::
 
 ## 3.1.2 Time course transcriptome analysis
 
-为了更好的了解这些DEGs在不同年份之间的表达变化，我们通过mFuzz对DEGs做了时序分析，这些DEGs被分成了12个cluster。这些DETs表现出多样的趋势，在这些expression pattern中，我们更加关注在Adult中特异表达的DEGs，其中cluster2,8,9表现出明显的在材料size5中高表达，而在其他时期相对较低（Figure 5 A）。通过后续的GO富集分析我们发现，cluster2的DEGs更多的影响的是非编码RNA代谢通路`ncRNA metabolic process`,泛素依赖性蛋白质分解代谢过程`ubiquitin−dependent protein catabolic process`(Figure S6 A)。cluster8与cluster2的功能类似，同样也是影响 `RNA metabolic process`，`protein modification process`.然而 cluster9则显著富集在碳水化合物代谢，多糖代谢过程等通路（Figure 6 B）
+为了更好的了解这些DEGs在不同年份之间的表达变化，我们通过mFuzz对DEGs做了时序分析，这些DEGs被分成了12个cluster。这些DETs表现出多样的趋势，在这些expression pattern中，我们更加关注在Adult中特异表达的DEGs，其中cluster2,8,9表现出明显的在材料size5中高表达，而在其他时期相对较低（Figure 5 A）。通过后续的GO富集分析我们发现，cluster2的DEGs更多的影响的是非编码RNA代谢通路`ncRNA metabolic process`,泛素依赖性蛋白质分解代谢过程`ubiquitin−dependent protein catabolic process`(Figure S6 A)。cluster8与cluster2的功能类似，同样也是影响 `RNA metabolic process`，`protein modification process`.然而 cluster9则显著富集在碳水化合物代谢，多糖代谢过程等通路（Figure 6 B）从表达模式上看，Size5中，除了在nuclear metabolic和protein modification这些pathway上调之外，多糖代谢，特别是多糖合成代谢也上调了。而同属Adult的size6特意表达的基因在cluster11，GO富集分析的结果显示这些DEGs更多的参与到了氧化还原，有机酸的生物合成代谢通路、苯丙烷的代谢通路中（Figure 6 C）从cellular component trem的富集结果看，这些DEGs与质膜相关，参与了植物细胞壁的形成。此外我们还发现在幼年黄精材料中特异性表达的一些cluster，比如cluster3在Size3阶段特意高表达，cluster4在size4阶段特意高表达，cluster10在size2阶段高表达，cluster12在size1阶段高表达，cluster5在size1-2阶段高表达。综上，我们通过时序分析挖掘出老年黄精和幼年黄精在整体表达模式上的异同，结果表明，相对于幼年黄精，成年黄精在`RNA metabolic process`，`protein modification process`，`obsolete oxidation-reduction progress`,`phenylpropanoid metabolic process`较为活跃，此外在Size5的材料中我们发现了成年黄精在多糖合成代谢中要明显高于幼年黄精，而且在Size6中质膜，植物细胞壁合成的方面也要高于幼年黄精。
+
+```{r,message=FALSE, warning=FALSE, include=FALSE, out.width='100%'}
+suppressMessages(library(bruceR))
+```
+
+```{r,echo=FALSE, message=FALSE, warning=FALSE}
+Tables3 <- import("../03.Progress/03.NGS/01.PSP/psp.anno2.xlsx",sheet = 1) %>% head()
+
+print_table(Tables3,digits = 2)
+```
 
 
-::: {#fig6.mFuzz layout-nrow="2"}  
-
-![Figure6.mFuzz](Fig6.mFuzz.png){#Def}  
+::: {#fig6.mFuzz layout-nrow="2"}
+![Figure6.mFuzz](Fig6.mFuzz.png)
+![Figuretmp1.heatmap](cluster9.heatmap.png)
 :::
+
+## 3.1.3 黄精多糖合成代谢通路分析。
+
+:::{#fig6.mFuzz layout-nrow="2"}
+![Figure_ref](iShot_2022-10-08_09.41.52.png)
+::: 
