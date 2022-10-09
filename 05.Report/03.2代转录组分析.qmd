@@ -55,14 +55,14 @@ Tables3 <- import("../03.Progress/03.NGS/01.PSP/psp.anno2.xlsx",sheet = 1) %>% h
 print_table(Tables3,digits = 2)
 ```
 
-
 ::: {#fig6.mFuzz layout-nrow="2"}
-![Figure6.mFuzz](Fig6.mFuzz.png)
-![Figuretmp1.heatmap](cluster9.heatmap.png)
+![Figure6.mFuzz](Fig6.mFuzz.png) ![Figuretmp1.heatmap](cluster9.heatmap.png)
 :::
 
 ## 3.1.3 黄精多糖合成代谢通路分析。
 
-:::{#fig6.mFuzz layout-nrow="2"}
+::: {layout-nrow="2"}
 ![Figure_ref](iShot_2022-10-08_09.41.52.png)
-::: 
+:::
+
+
