@@ -184,8 +184,18 @@ overview
 <center>**表2. 差异代谢物**</center>
 
 ```{r,echo=FALSE, message=FALSE, warning=FALSE,}
-Tables2 <- import("../04.Result/01.Tables/Adult_vs_Juvenal.xlsx",sheet = 1)
-print_table(Tables2,digits = 2)
+Table2 <- import("../04.Result/01.Tables/Table2.DAM.xlsx",sheet = 1)
+colnames(Table2) = Table2[1,]
+Table2 = Table2[2:10,]
+Table2 <-
+  Table2 %>% 
+  mutate(Adult = as.numeric(Adult),
+         Juvenal = as.numeric(Juvenal),
+         pvalue = as.numeric(pvalue),
+         FDR = as.numeric(FDR),
+         VIP = as.numeric(VIP),
+         log2fc = as.numeric(log2fc))
+print_table(Table2,digits = 2)
 ```
 
 ## 讨论

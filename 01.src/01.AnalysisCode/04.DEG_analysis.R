@@ -99,13 +99,31 @@ scatterplot3d(
 )
 legend("topleft",paste0("Size",1:6),fill = rainbow(6))
 dev.off()
-# DEanalysis --------------------------------------------------------------
-
-dir.create("DET",showWarnings = F,recursive = T)
 
 count_clean <-
   count_clean %>% column_to_rownames("gene_id") %>%
   as.matrix()
+
+sample_info <-
+  data.frame(
+    row.names = colnames(count_clean),
+    condition = rep(c('Juvenal','Adult'),c(11,4))
+  )
+
+dds <- DESeqDataSetFromMatrix(count_clean,sample_info,design = ~condition)
+dds <- DESeq(dds)
+
+res_all = results(dds,contrast = c("condition","Adult","Juvenal"))
+DET =
+  as.data.frame(res_all) %>%
+  filter(
+    abs(log2FoldChange) >= 0.26 & pvalue < 0.05 & !is.na(padj)
+  )
+writexl::write_xlsx(DET,"DET/AvsJ.xlsx")
+# DEanalysis --------------------------------------------------------------
+
+dir.create("DET",showWarnings = F,recursive = T)
+
 
 sample_info <-
   data.frame(

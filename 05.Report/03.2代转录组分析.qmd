@@ -35,18 +35,19 @@ bibliography: PosDocProject.bib
 
 为了搞清楚幼年黄精和成年黄精块茎在药效方面的差异，我们以3代全长转录组检测到的转录本为参考，将2代测序的clean reads比对回参考序列，对不同时期的野外黄精块茎样本进行精确的定性和定量。 结果表明平均每个样品产生了78.25 Mb的clean reads, 平均覆盖度为91.55% (Table S9)样品间的相关性表明分属juvenal组的样品和adult组的样品之间相关性较低。由于野外取样的原因，个体差异较为明显，生物学重复间的差异较大，特别是幼年材料，按大小划分整体不容易区分，对于成年材料来说，对于成年材料来说，size5和size6的生物学重复较好，但两者间的相关性非常低，说明差异较大（Figure5 A）,同时，我们对log2转换后的FPKM值计算了欧式距离，并进行了层级聚类，距离方法为`complete`,同时也做了PCA分析，结果显示不同年份的材料较好的聚集在一起(Figure S5 A,B)，且Size5和其他材料差异较大。 为了研究不同年份黄精之间的差异，我们对他们做了成对的差异分析，与材料相关性分析结果一致，size5和size6与其他组合差异基因数量最多，同时size5和size6之间也存在较大差异。综上，我们发现在转录水平幼年黄精和成年黄精间确实存在明显差异，而两个成年黄精材料间也存在较为明显的差异，尽管幼年黄精间可能由于个体差异的关系生物学重复不太理想，造成重复间相关性较低，但是在压缩数据变异度后（对FPKM取log）不同大小的黄精块茎材料间的差异还是被凸显出来，所以通过经验判断黄精年份的方法确实存在一定问题，但是在转录水平确实体现出一定的趋势，同时在如此大的个体差异存在的情况下，幼年黄精和成年黄精间显著的差异表明黄精在生长发育到一定阶段后，块茎内正在进行的生物学过程及代谢途径确实发生了显著的改变。从幼年黄精和成年黄精材料的转录及代谢数据中去规避个体差异造成的影响从而挖掘真实的年份积累造成的差异成为本研究关注的重点。
 
-::: {#fig5.DEG_overview layout-nrow="2"}
-![Figure5.DEG.overview](Fig5.DEG_overview.png){#Def}
+::: {#fig5.DET_overview layout-nrow="2"}
+![Figure5.DET.overview](Fig5.DET_overview.png){#Def}
 
-![FigureS5.DEG.overview2](FigS5.NGS_Trans_Overview.png)
+![FigureS5.DET.overview2](FigS5.NGS_Trans_Overview.png)
 :::
 
 ## 3.1.2 Time course transcriptome analysis
 
-为了更好的了解这些DEGs在不同年份之间的表达变化，我们通过mFuzz对DEGs做了时序分析，这些DEGs被分成了12个cluster。这些DETs表现出多样的趋势，在这些expression pattern中，我们更加关注在Adult中特异表达的DEGs，其中cluster2,8,9表现出明显的在材料size5中高表达，而在其他时期相对较低（Figure 5 A）。通过后续的GO富集分析我们发现，cluster2的DEGs更多的影响的是非编码RNA代谢通路`ncRNA metabolic process`,泛素依赖性蛋白质分解代谢过程`ubiquitin−dependent protein catabolic process`(Figure S6 A)。cluster8与cluster2的功能类似，同样也是影响 `RNA metabolic process`，`protein modification process`.然而 cluster9则显著富集在碳水化合物代谢，多糖代谢过程等通路（Figure 6 B）从表达模式上看，Size5中，除了在nuclear metabolic和protein modification这些pathway上调之外，多糖代谢，特别是多糖合成代谢也上调了。而同属Adult的size6特意表达的基因在cluster11，GO富集分析的结果显示这些DEGs更多的参与到了氧化还原，有机酸的生物合成代谢通路、苯丙烷的代谢通路中（Figure 6 C）从cellular component trem的富集结果看，这些DEGs与质膜相关，参与了植物细胞壁的形成。此外我们还发现在幼年黄精材料中特异性表达的一些cluster，比如cluster3在Size3阶段特意高表达，cluster4在size4阶段特意高表达，cluster10在size2阶段高表达，cluster12在size1阶段高表达，cluster5在size1-2阶段高表达。综上，我们通过时序分析挖掘出老年黄精和幼年黄精在整体表达模式上的异同，结果表明，相对于幼年黄精，成年黄精在`RNA metabolic process`，`protein modification process`，`obsolete oxidation-reduction progress`,`phenylpropanoid metabolic process`较为活跃，此外在Size5的材料中我们发现了成年黄精在多糖合成代谢中要明显高于幼年黄精，而且在Size6中质膜，植物细胞壁合成的方面也要高于幼年黄精。
+为了更好的了解这些DETs在不同年份之间的表达变化，我们通过mFuzz对DETs做了时序分析，这些DETs被分成了12个cluster。这些DETs表现出多样的趋势，在这些expression pattern中，我们更加关注在Adult中特异表达的DETs，其中cluster2,8,9表现出明显的在材料size5中高表达，而在其他时期相对较低（Figure 5 A）。通过后续的GO富集分析我们发现，cluster2的DETs更多的影响的是非编码RNA代谢通路`ncRNA metabolic process`,泛素依赖性蛋白质分解代谢过程`ubiquitin−dependent protein catabolic process`(Figure S6 A)。cluster8与cluster2的功能类似，同样也是影响 `RNA metabolic process`，`protein modification process`.然而 cluster9则显著富集在碳水化合物代谢，多糖代谢过程等通路（Figure 6 B）从表达模式上看，Size5中，除了在nuclear metabolic和protein modification这些pathway上调之外，多糖代谢，特别是多糖合成代谢也上调了。值得注意的是cluster 9中除了Size5外，这些基因在Szie1中表达量同样较高，而同属Adult的size6特意表达的基因在cluster11，GO富集分析的结果显示这些DETs更多的参与到了氧化还原，有机酸的生物合成代谢通路、苯丙烷的代谢通路中（Figure 6 C）从cellular component trem的富集结果看，这些DETs与质膜相关，参与了植物细胞壁的形成,从KEGG富集分析的结果看α-亚麻酸代谢也显著被富集(Figure S 6C)。此外我们还发现在幼年黄精材料中特异性表达的一些cluster，比如cluster3在Size3阶段特意高表达，cluster4在size4阶段特意高表达，cluster10在size2阶段高表达，cluster12在size1阶段高表达，cluster5在size1-2阶段高表达。综上，我们通过时序分析挖掘出老年黄精和幼年黄精在整体表达模式上的异同，结果表明，相对于幼年黄精，成年黄精在`RNA metabolic process`，`protein modification process`，`obsolete oxidation-reduction progress`,`phenylpropanoid metabolic process`较为活跃，基于GO富集分析的结果，我们发现似乎Size1和Size5多糖合成代谢要比其他时期更强。
 
 ```{r,message=FALSE, warning=FALSE, include=FALSE, out.width='100%'}
 suppressMessages(library(bruceR))
+suppressMessages(library(tidyverse))
 ```
 
 ```{r,echo=FALSE, message=FALSE, warning=FALSE}
@@ -56,13 +57,48 @@ print_table(Tables3,digits = 2)
 ```
 
 ::: {#fig6.mFuzz layout-nrow="2"}
-![Figure6.mFuzz](Fig6.mFuzz.png) ![Figuretmp1.heatmap](cluster9.heatmap.png)
+![Figure6.mFuzz](Fig6.mFuzz.png) 
 :::
 
 ## 3.1.3 黄精多糖合成代谢通路分析。
 
-::: {layout-nrow="2"}
-![Figure_ref](iShot_2022-10-08_09.41.52.png)
+为了更好的了解黄精多糖的代谢通路在幼年黄精和成年黄精之间的差异，我们基于我们三代全长转录组注释信息及 @wangNovoAssemblyAnalysis2017 ，@fengTranscriptomeAnalysisDifferent2022 总结的proposed pathways for polysaccharide biosynthesis in *polygonatum sibiricum*. 对幼年黄精和成年黄精之间的黄精多糖代谢途径探索，首先我们基于注释数据库对基因进行了筛选，我们保留了NR, NT以及swissport数据库比对结果中至少有两个数据库E-value < 1E-100. 其次使用至少有两个sample中FPKM > 1的条件对结果进一步筛选，最终得到128个高可信的PSP-related genes (Table S10),其中有118个属于DET. 参考@wangNovoAssemblyAnalysis2017 ，@fengTranscriptomeAnalysisDifferent2022 的方法，我们将注释到同一基因的isoform的FPKM值合并，然后计算了Juvenal和Adult样品间这些基因的表达量变化得到以下结果。  
+
+根据该推断出来的黄精多糖合成通路，我们发现植物在经过光合作用合成蔗糖后，蔗糖通过`β-fructofuranosidase (*sacA*)`水解成`Fructose`和`Glucose 6-phosphate (Glc-6P)`,果糖在果糖激酶`fructokinase (*scrK*)`及`hexokinase (*HK*)`的作用下被磷酸化为6磷酸果糖 `Fructose-6P (Fru-6P)` ，同时，G6P也会在葡萄糖6磷酸异构酶`glucose-6-phosphate isomerase (GPI)`的作用下转变为F6P。一部分的果糖会转变为甘露糖(Mannose)，甘露糖在*HK*的作用下被磷酸化为6磷酸甘露糖`Mannose-6P (Man-6P)`，此外，F6P也会在甘露糖 6-磷酸异构酶`mannose-6-phosphate isomerase (*MPI*)` 的作用下转变为M6P。而M6P会在磷酸腺苷变位酶`phosphomannomutase (*PMM*)`的作用下变为1磷酸甘露糖(`Mannose-1P`)，然后在甘露糖-1-磷酸鸟苷转移酶`mannose-1-phosphate guanylyltransferase (*GMPP*)`的作用下转变为`GDP-Mannose`而`GDP-Mannose`一方面通过GDP甘露糖4，,6脱水酶`GDPmannose 4,6-dehydratase (*GMDS*)`脱去一分子水变为`GDP-4-keto-6-deoxy-D-mannose`，然后在GDP果糖合酶`GDP-L-fucose synthase (*TSTA3*)`的作用下形成GDP果糖`GDP-Fuc`，最终聚合成多糖,另一方面通过多步反应最终合成甘露聚糖。在该途径中，我们发现*sacA*、*scrK*及*MPI*在成年黄精中表达量明显高于幼年黄精，说明在成年黄精中，由蔗糖向葡萄糖及果糖转化过程明显增强，同时果糖被磷酸化为F6P的过程同样也增强，F6P异构化转变为甘露糖的过程也增强，所以似乎成年黄精在合成`GDP-Monnose`被加强了。同时我们发现甘露糖磷酸化的过程在成年黄精中有所减弱，同时转变为`1,4-β-Mannan`的能力也减弱，同时`GDP-Monnose`转变为`GDP-Fuctose`的过程由于*TSTA3*的显著下调也减弱了。由此我们可以推断出成年黄精合成甘露聚糖的能力要优于幼年黄精。
+
+另一条通路为G6P在磷酸葡萄糖变位酶`phosphoglucomutase (*pgm*)`的作用下转化为G1P，G1P一方面通过`Glucose-1-phosphate adenylyltransferase (*glgc*)` 转化为`ADP-Glc`，或者通过多步反应生成纤维二糖(cellobiose),纤维二糖在`beta-glucosidase (*Bglu*)` 的作用下转换为葡萄糖。在这两条途径中`glgc`在成年黄精中显著上调，说明更多的G1P直接转化成ADP-Glc。此外我们在代谢组数据中发现纤维二糖在成年黄精中积累量要显著高于幼年黄精，我们推测成年黄精中G1P在合成纤维素(cellulose)后会发生水解生成纤维素糊精，纤维二糖等，而`Bglu`的下调导致这些纤维素水解产物不能快速的转化为葡萄糖从而在成年黄精中积累。G1P还可以在UTP——葡萄糖-1-磷酸尿苷酰转移酶`UTP--glucose-1-phosphate uridylyltransferase (*galU*)`的作用下变为UDP-Glc，然后在`UDP-glucose 4,6-dehydratase (*RHM*)`的催化下变为`UDP-4-keto-6-deoxy-D-Glc` 在经过多不反应生成UDP鼠李糖`UDP-Rha`,最终形成多糖。此外UDP-Glc在UDP葡萄糖4-差向异构酶`UDP-glucose 4-epimerase (GALE)`的作用下与UDP半乳糖`UDP-Gal`相互转换,`UDP-Gal`分解为乳糖和半乳糖后在β半乳糖苷酶的作用下合成`D-Gal`，然后多步反应生成`α-D-G1P`。另一方面UDP-Glc在`UDP-glucose 6-dehydrogenase`作用下生成UDP-葡萄糖醛酸`UDP-GlcA`,`UDP-GlcA`在差向异构酶`UDP-glucuronate 4-epimerase (*UGE*)`的作用下与`UDP-GalA`互相转化。UDP-GlcA会在`UDP-apiose/xylose synthase (*AXS*)`和`UDP-glucuronate decarboxylase (*UXS*)`的作用下生成`UDP-D-Xylose`和UDP-D-芹菜糖`UDP-D-Apiose`，`UDP-D-Xylose`会在`UDP-arabinose 4-epimerase (*UXE*)` 作用下形成`UDP-D-Aarabinose`。在这个过程中我们发现*UGDH*，*GAE*在成年黄精中显著高表达，说明在在UDP-Glc和UDP-Gal之间通过转变为对应的UDP-糖醛酸形式进行转变的活动更加活跃。和*AXS*和*UXS*的上调也说明在成年黄精中UDP-Glc转变为其他UDP-糖的活动较为活跃。
+
+综上，我们发现在成年黄精中蔗糖分解途径更加活跃，产生黄精多糖的底物相应的会增多，而多糖种类中，我们发现成年黄精更倾向于积累甘露聚糖，且从UDP-Glc转变为其他类型UDP-糖的能力也要由于幼年黄精。
+
+
+```{r,echo=FALSE, message=FALSE, warning=FALSE}
+Tables10 <- import("../04.Result/01.Tables/TableS10.PSP_genes.xlsx",sheet = 1) %>% head()
+colnames(Tables10)[1:4] = Tables10[1,1:4]
+colnames(Tables10)[5:ncol(Tables10)] = Tables10[2,5:ncol(Tables10)]
+Tables10 = Tables10[-c(1:2),]
+print_table(Tables10,digits = 2)
+```
+
+::: {layout-nrow="1"} 
+![Fig7.PSP](Fig7.PSP.png)
 :::
 
+## 3.1.4 不饱和脂肪酸代谢
+
+我们在之前的代谢组数据中发现在成年黄精中亚油酸和α-亚麻酸含量要显著高于幼年黄精，根据KEGG数据库的注释我们发现，α-亚麻酸`α-linolenic acid`可以被`E3.1.1.4`催化由磷脂酰胆碱`Phosahatidylcholine`水解形成，亚油酸同样可以通过`E3.1.1.4`由卵磷脂水解而来，通常植物中的`E3.1.1.4`主要为`triacylglycerol lipase SDP1 (SDP1/TGL4)`, `Secretory phospholipase A2 (PLA2G)`,`phospholipase A1 (LCAT3)` ，而亚油酸和α-亚麻酸在植物中会通过`lipoxygenase (LOX)`氧化生成`HPODE`或者`HpOTrE`,本研究鉴定到78个相关isoform，其中DET仅有38个，合并后我们整体看了下他们在幼年黄精和成年黄精之间的差异，结果表明`TGL4`似乎在幼年黄精中表达量较高，而`LCAT3`在成年黄精中表达量较高，同时LOX1_5在成年黄精中表达量显著降低(log2fc = -0.98, pvalue = 0.042 one-way anova),而LOX2S差异并不显著(log2fc = 0.305, pvalue = 0.081)，说明成年黄精在亚油酸及α-亚麻酸氧化过程被抑制。而`LACT3`的显著高表达(log2fc = 0.65,pvalue = 0.000338)说明α-亚麻酸和亚油酸合成途径上调，`TGL4`差异在Adult和Juvenal之间差异并不显著(log2fc = -0.85,pvalue = 0.547) (Figure 8).
+
+```{r,echo=FALSE, message=FALSE, warning=FALSE}
+Tables11 <- import("TableS11.UnFA.xlsx",sheet = 1) %>% head()
+colnames(Tables11)[1:4] = Tables11[1,1:4]
+colnames(Tables11)[5:ncol(Tables11)] = Tables11[2,5:ncol(Tables11)]
+Tables11 = Tables11[-c(1:2),]
+print_table(Tables11,digits = 2)
+```
+
+::: {layout-nrow="1"} 
+![Fig8.UnFA](Fig8.UnFA.png)
+:::
+
+
+## 类黄酮代谢通路
 
