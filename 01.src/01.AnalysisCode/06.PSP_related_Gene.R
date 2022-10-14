@@ -21,13 +21,13 @@ library(rstatix)
 # import data -------------------------------------------------------------
 
 psp_gene_anno <- readxl::read_xlsx("../PSP_related_Gene_clean.xlsx")
-
+colnames(psp_gene_anno)[1] = "gene_id"
 raw_fpkm <- readxl::read_xlsx("../FPKM.xlsx")
 
 psp_fpkm_raw <-
   left_join(
     x = data.frame(
-      gene_id = psp_gene_anno$Gene_ID,
+      gene_id = psp_gene_anno$gene_id,
       category = psp_gene_anno$Category
     ),
     y = raw_fpkm,
@@ -37,10 +37,10 @@ psp_fpkm_raw <-
   )
 
 DET <- readxl::read_xlsx("../../02.Pacbio/Exp_data_split/DET/FPKM_merge_all.xlsx")
-psp_fpkm_raw = inner_join(psp_fpkm_raw,
+psp_fpkm_raw1 = inner_join(psp_fpkm_raw,
                           data.frame(gene_id = DET$Gene_ID))
 psp_anova <-
-  psp_fpkm_raw %>%
+  psp_fpkm_raw1 %>%
   pivot_longer(contains('Size'),names_to = 'Size',values_to = 'value') %>%
   mutate(Size = gsub(pattern = "..$",replacement = "",Size)) %>%
   mutate(group = case_when(
@@ -54,7 +54,7 @@ psp_anova <-
 ##> Merge all isoforms which annotated to the same 'gene'
 
 psp_exp_mat_long <-
-  psp_fpkm_raw %>%
+  psp_fpkm_raw1 %>%
   pivot_longer(contains('Size'),names_to = 'Size',values_to = 'value') %>%
   mutate(Size = gsub(pattern = "..$",replacement = "",Size)) %>%
   group_by(category,Size) %>%
@@ -88,4 +88,24 @@ Heatmap(
 )
 dev.off()
 
-setdiff(psp_gene_anno$Gene_ID,psp_fpkm_raw$gene_id)
+gene_anno <-
+  inner_join(
+    data.frame(
+      gene_id = psp_fpkm_raw$gene_id
+    ),
+    psp_gene_anno
+  ) %>% as_tibble() %>%
+  left_join(
+    .,data.frame(
+      gene_id = psp_fpkm_raw1$gene_id,
+      `DET set` = TRUE
+    )
+  ) %>%
+  mutate(
+    DET.set =  case_when(
+      is.na(DET.set) ~ FALSE,
+      TRUE ~ TRUE
+    )
+  )
+writexl::write_xlsx(gene_anno,"../../../05.Report/TableS10.psp.xlsx")
+

@@ -83,7 +83,7 @@ print_table(Tables10,digits = 2)
 ![Fig7.PSP](Fig7.PSP.png)
 :::
 
-## 3.1.4 不饱和脂肪酸代谢
+## 3.1.4 不饱和脂肪酸代谢和苯丙烷代谢
 
 我们在之前的代谢组数据中发现在成年黄精中亚油酸和α-亚麻酸含量要显著高于幼年黄精，根据KEGG数据库的注释我们发现，α-亚麻酸`α-linolenic acid`可以被`E3.1.1.4`催化由磷脂酰胆碱`Phosahatidylcholine`水解形成，亚油酸同样可以通过`E3.1.1.4`由卵磷脂水解而来，通常植物中的`E3.1.1.4`主要为`triacylglycerol lipase SDP1 (SDP1/TGL4)`, `Secretory phospholipase A2 (PLA2G)`,`phospholipase A1 (LCAT3)` ，而亚油酸和α-亚麻酸在植物中会通过`lipoxygenase (LOX)`氧化生成`HPODE`或者`HpOTrE`,本研究鉴定到78个相关isoform，其中DET仅有38个，合并后我们整体看了下他们在幼年黄精和成年黄精之间的差异，结果表明`TGL4`似乎在幼年黄精中表达量较高，而`LCAT3`在成年黄精中表达量较高，同时LOX1_5在成年黄精中表达量显著降低(log2fc = -0.98, pvalue = 0.042 one-way anova),而LOX2S差异并不显著(log2fc = 0.305, pvalue = 0.081)，说明成年黄精在亚油酸及α-亚麻酸氧化过程被抑制。而`LACT3`的显著高表达(log2fc = 0.65,pvalue = 0.000338)说明α-亚麻酸和亚油酸合成途径上调，`TGL4`差异在Adult和Juvenal之间差异并不显著(log2fc = -0.85,pvalue = 0.547) (Figure 8).
 

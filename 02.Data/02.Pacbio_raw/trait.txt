@@ -1,0 +1,16 @@
+gene_id	group
+Size_1_1	Juvenal
+Size_1_2	Juvenal
+Size_1_3	Juvenal
+Size_2_1	Juvenal
+Size_2_2	Juvenal
+Size_2_3	Juvenal
+Size_3_1	Juvenal
+Size_3_2	Juvenal
+Size_3_3	Juvenal
+Size_4_1	Juvenal
+Size_4_2	Juvenal
+Size_5_1	Adult
+Size_5_2	Adult
+Size_6_1	Adult
+Size_6_2	Adult
