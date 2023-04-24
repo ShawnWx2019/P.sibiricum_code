@@ -41,7 +41,7 @@ Description
 bash runTidymass.sh -i raw/p_sibiricum -t 1 -c rp
 ```
 
-# Description
+# Content
 
 **Step1. convert .raw data to .mzXML and .mgf**
 
