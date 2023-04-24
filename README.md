@@ -1,10 +1,10 @@
 # Analysis and visualize code of *P.sibiricum* research.
 
-[![R version](https://img.shields.io/badge/R-v4.2.2-salmon)](https://www.r-project.org) [![license](https://img.shields.io/badge/license-MIT-cyan)](https://opensource.org/licenses/MIT) [![Myblog](https://img.shields.io/badge/Blog-ShanwLearnBioinfo-purple)](https://shawnwx2019.github.io/) [![DOI](https://img.shields.io/badge/DOI-10.3389/fpls.2023.1181861-blue)](https://www.frontiersin.org/articles/10.3389/fpls.2023.1181861/full) [![Accept](https://img.shields.io/badge/Accept%20date-18%20Apr%202023-orange)](https://www.frontiersin.org/articles/10.3389/fpls.2023.1181861/full)
+[![R version](https://img.shields.io/badge/R-v4.2.2-salmon)](https://www.r-project.org) [![license](https://img.shields.io/badge/license-MIT-cyan)](https://opensource.org/licenses/MIT) [![Myblog](https://img.shields.io/badge/Blog-ShanwLearnBioinfo-purple)](https://shawnwx2019.github.io/) [![DOI](https://img.shields.io/badge/DOI-10.3389/fpls.2023.1181861-blue)](https://www.frontiersin.org/articles/10.3389/fpls.2023.1181861/full) [![SRA](https://img.shields.io/badge/SRA-PRJNA941943-yellow)](https://www.ncbi.nlm.nih.gov/bioproject/PRJNA941943) [![Accept](https://img.shields.io/badge/Accept%20date-18%20Apr%202023-orange)](https://www.frontiersin.org/articles/10.3389/fpls.2023.1181861/full)
 
 # Citation
 
-Ou X<sup>#\*</sup>., Wang X<sup>#</sup>., Zhao B., Zhao Y., Liu HQ., Chang Y., Wang Z., Yang W., Zhang X<sup>\*</sup>., Yu K<sup>\*</sup>. Metabolome and transcriptome signatures shed light on the anti-obesity effect of *Polygonatum sibiricum*. 2023, *Frontiers in Plant Science.*, 14:1273.
+Ou X<sup>#\*</sup>., Wang X<sup>\#</sup>., Zhao B., Zhao Y., Liu HQ., Chang Y., Wang Z., Yang W., Zhang X<sup>\*</sup>., Yu K<sup>\*</sup>. Metabolome and transcriptome signatures shed light on the anti-obesity effect of *Polygonatum sibiricum*. 2023, *Frontiers in Plant Science.*, 14:1273.
 
 # Metabolomics data analysis
 
