@@ -1,6 +1,11 @@
 # Analysis and visualize code of *P.sibiricum* research.
 
-[![R version](https://img.shields.io/badge/R-v4.2.2-salmon)](https://www.r-project.org) [![license](https://img.shields.io/badge/license-MIT-cyan)](https://opensource.org/licenses/MIT) [![Myblog](https://img.shields.io/badge/Blog-ShanwLearnBioinfo-purple)](https://shawnwx2019.github.io/) [![Paper](https://img.shields.io/badge/Paper-Front.%20Plant%20Sci.-blue)](https://doi.org/10.3389/fpls.2023.1181861) [![Accept](https://img.shields.io/badge/Accept%20date-18%20Apr%202023-orange)](https://doi.org/10.3389/fpls.2023.1181861)
+[![R version](https://img.shields.io/badge/R-v4.2.2-salmon)](https://www.r-project.org) [![license](https://img.shields.io/badge/license-MIT-cyan)](https://opensource.org/licenses/MIT) [![Myblog](https://img.shields.io/badge/Blog-ShanwLearnBioinfo-purple)](https://shawnwx2019.github.io/) [![DOI](https://img.shields.io/badge/DOI-10.3389/fpls.2023.1181861-blue)](https://www.frontiersin.org/articles/10.3389/fpls.2023.1181861/full) [![Accept](https://img.shields.io/badge/Accept%20date-18%20Apr%202023-orange)](https://www.frontiersin.org/articles/10.3389/fpls.2023.1181861/full)
+
+# Citation
+
+Ou X, Wang X, Zhao B, Zhao Y, LIU HQ, Chang Y, Wang Z, Yang W, ZHANG X, Yu K. Metabolome and transcriptome signatures shed light on the anti-obesity effect of *Polygonatum sibiricum*. *Frontiers in Plant Science.*;14:1273.
+
 
 # Metabolomics data analysis
 
@@ -39,17 +44,17 @@ bash runTidymass.sh -i raw/p_sibiricum -t 1 -c rp
 
 ## peak picking
 
-**Step1. convert .raw data to .mzXML and .mgf**  
+**Step1. convert .raw data to .mzXML and .mgf**
 
--   .raw 2 .mzXML: [01.msconvert.sh](https://github.com/ShawnWx2019/HPC_tidymass/blob/main/src/shell/01.msconvert.sh)  
+-   .raw 2 .mzXML: [01.msconvert.sh](https://github.com/ShawnWx2019/HPC_tidymass/blob/main/src/shell/01.msconvert.sh)
 
--   .raw 2 .mgf: [03.ms2convert.sh](https://github.com/ShawnWx2019/HPC_tidymass/blob/main/src/shell/03.ms2convert.sh)  
+-   .raw 2 .mgf: [03.ms2convert.sh](https://github.com/ShawnWx2019/HPC_tidymass/blob/main/src/shell/03.ms2convert.sh)
 
-**Step2. Data cleaning and normalization**  
+**Step2. Data cleaning and normalization**
 
--   Raw data overview: [OverviewMetabolomicsData.R](https://github.com/ShawnWx2019/P.sibiricum_code/blob/main/01.DataPrepare/OverviewMetabolomicsData.R)  
+-   Raw data overview: [OverviewMetabolomicsData.R](https://github.com/ShawnWx2019/P.sibiricum_code/blob/main/01.DataPrepare/OverviewMetabolomicsData.R)
 
--   Data cleaning and normalization: [DataCleaning.R](https://github.com/ShawnWx2019/P.sibiricum_code/blob/main/02.Metabolomics/DataCleaning.R)  
+-   Data cleaning and normalization: [DataCleaning.R](https://github.com/ShawnWx2019/P.sibiricum_code/blob/main/02.Metabolomics/DataCleaning.R)
 
 -   Data annotation: [DataAnnotation.R](https://github.com/ShawnWx2019/P.sibiricum_code/blob/main/02.Metabolomics/DataAnnotation.R)
 
