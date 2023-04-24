@@ -1,9 +1,0 @@
-MetDNA2 run log
-2022-09-19 13:09:31
-1. Check parameters and data.
-2. Initial seed annotation.
-3. Metabolic reaction network based metabolite annotation.
-4. Annotaion Credential.
-5. Merge and export result tables.
-6. Biology interpretation.
-7. MetDNA2 analysis report generation.
