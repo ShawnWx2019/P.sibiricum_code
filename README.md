@@ -4,8 +4,7 @@
 
 # Citation
 
-Ou X, Wang X, Zhao B, Zhao Y, LIU HQ, Chang Y, Wang Z, Yang W, ZHANG X, Yu K. Metabolome and transcriptome signatures shed light on the anti-obesity effect of *Polygonatum sibiricum*. *Frontiers in Plant Science.*;14:1273.
-
+Ou X<sup>#\*</sup>., Wang X<sup>#</sup>., Zhao B., Zhao Y., Liu HQ., Chang Y., Wang Z., Yang W., Zhang X<sup>\*</sup>., Yu K<sup>\*</sup>. Metabolome and transcriptome signatures shed light on the anti-obesity effect of *Polygonatum sibiricum*. 2023, *Frontiers in Plant Science.*, 14:1273.
 
 # Metabolomics data analysis
 
@@ -52,7 +51,7 @@ bash runTidymass.sh -i raw/p_sibiricum -t 1 -c rp
 
 **Step2. Data cleaning and normalization**
 
--   Raw data overview: [OverviewMetabolomicsData.R](https://github.com/ShawnWx2019/P.sibiricum_code/blob/main/01.DataPrepare/OverviewMetabolomicsData.R)
+-   Raw data overview: [OverviewMetabolomicsData.R](https://github.com/ShawnWx2019/P.sibiricum_code/blob/main/02.Metabolomics/OverviewMetabolomicsData.R)
 
 -   Data cleaning and normalization: [DataCleaning.R](https://github.com/ShawnWx2019/P.sibiricum_code/blob/main/02.Metabolomics/DataCleaning.R)
 
